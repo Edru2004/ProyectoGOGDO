@@ -1,0 +1,52 @@
+/* public/css/dashboard.css */
+:root {
+    --primary-color: #5b9036; /* Ajustado a tu color verde */
+    --secondary-color: #2c2c2c;
+    --light-bg: #f7f9fc;
+}
+
+body { background: var(--light-bg); margin: 0; font-family: 'Poppins', sans-serif; }
+
+.sidebar {
+    width: 250px; height: 100vh; background: var(--secondary-color);
+    color: white; padding-top: 20px; position: fixed; transition: 0.3s; z-index: 1000;
+}
+
+.sidebar.closed { width: 80px; }
+
+/* Ocultar texto cuando el sidebar está cerrado */
+.sidebar.closed span, 
+.sidebar.closed .welcome-text,
+.sidebar.closed #nombreEstudiante,
+.sidebar.closed .profile-section p {
+    display: none;
+}
+
+.sidebar a {
+    display: flex; align-items: center; padding: 15px 25px;
+    color: white; text-decoration: none; transition: 0.2s;
+}
+
+.sidebar a i { min-width: 30px; font-size: 1.2rem; }
+
+.sidebar a:hover { background: var(--primary-color); color: white; }
+
+.profile-section { text-align: center; padding: 20px; border-bottom: 1px solid #444; margin-bottom: 15px; }
+
+.profile-avatar {
+    width: 60px; height: 60px; border-radius: 50%;
+    background: var(--primary-color); display: flex;
+    align-items: center; justify-content: center; margin: 0 auto 10px; font-size: 1.5rem;
+}
+
+.content { margin-left: 250px; transition: 0.3s; width: calc(100% - 250px); }
+.sidebar.closed + .content { margin-left: 80px; width: calc(100% - 80px); }
+
+.navbar { background: var(--primary-color) !important; color: white; }
+
+.kpi-card-dashboard {
+    padding: 25px; text-align: center; border-radius: 15px; border: none;
+    background: white; box-shadow: 0 10px 20px rgba(0,0,0,0.05); transition: 0.3s;
+}
+.kpi-card-dashboard:hover { transform: translateY(-5px); }
+.kpi-card-dashboard i { font-size: 2rem; color: var(--primary-color); margin-bottom: 10px; }

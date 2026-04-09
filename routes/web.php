@@ -5,12 +5,35 @@ use App\Http\Controllers\EstudianteController;
 use App\Http\Controllers\DocenteController;
 use App\Http\Controllers\AsignacionesController;
 use App\Http\Controllers\TutorController; // IMPORTANTE: Agregar el nuevo controlador
+use App\Http\Controllers\DocenteLoginController;
+use App\Http\Controllers\Auth\LoginEstudianteController;// IMPORTANTE: Agregar el nuevo controlador
 
 // Panel principal
 Route::get('/inicio', function () {
     return view('inicio'); 
 })->name('inicio');
 Route::get('/inicio', [EstudianteController::class, 'inicio'])->name('inicio');
+
+
+
+// --- AGREGAR ESTO AL PRINCIPIO ---
+
+// Esta ruta es para que Laravel no marque error si intenta redireccionar al login por defecto
+Route::get('/login', [LoginEstudianteController::class, 'showLoginForm'])->name('login');
+
+// Rutas específicas para el acceso de tus alumnos
+Route::get('/login-estudiante', [LoginEstudianteController::class, 'showLoginForm'])->name('estudiante.login');
+Route::post('/login-estudiante', [LoginEstudianteController::class, 'login'])->name('estudiante.login.post');
+Route::post('/logout-estudiante', [LoginEstudianteController::class, 'logout'])->name('estudiante.logout');
+
+// Dashboard protegido (Solo para alumnos logueados)
+Route::middleware(['auth:estudiante'])->group(function () {
+    Route::get('/estudiante/dashboard', function () {
+       return view('estudiantes.dashboard');
+    })->name('estudiante.dashboard');
+});
+
+// --- EL RESTO DE TUS RUTAS SIGUE ABAJO IGUALITO ---
 // ---------------------------------------------------------
 // CRUD de Estudiantes
 // ---------------------------------------------------------
@@ -64,3 +87,23 @@ Route::post('/asignaciones', [AsignacionesController::class, 'store'])->name('as
 
 
 
+// Fíjate que el nombre coincida con lo que escribes en el navegador
+Route::get('/estudiante/credencial', [EstudianteController::class, 'verCredencial'])->name('estudiante.credencial');
+Route::get('/estudiante/calificaciones', [EstudianteController::class, 'verCalificaciones'])->name('estudiante.calificaciones');
+
+// RUTAS DE ACCESO
+// Dentro de routes/web.php
+
+Route::middleware(['auth:docente'])->prefix('docente')->name('docente.')->group(function () {
+    
+    // Dashboard principal
+    Route::get('/dashboard', [DocenteController::class, 'dashboard'])->name('dashboard');
+
+    // Lista de alumnos (Solo deja una de estas, tenías dos)
+    Route::get('/lista/{id_asignacion}', [DocenteController::class, 'verLista'])->name('lista');
+
+    // CORRECCIÓN AQUÍ: Quita el 'docente/' del URL y deja solo el nombre 'guardar_calificaciones'
+    Route::post('/guardar-calificaciones', [DocenteController::class, 'guardarCalificaciones'])->name('guardar_calificaciones');
+    
+    Route::post('/logout', [DocenteLoginController::class, 'logout'])->name('logout');
+});

@@ -9,7 +9,10 @@ use App\Models\Docente; // Agregado
 use App\Models\Semestre;
 use App\Models\Grupos;
 use App\Models\Inscripciones;
+use App\Models\Calificaciones;
+
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Auth; // Verifica que esta línea esté al inicio del archivo
 
 class EstudianteController extends Controller {
     
@@ -139,5 +142,36 @@ public function reporteGeneral()
     $pdf = Pdf::loadView('estudiantes.pdf_general', compact('estudiantes'))
               ->setPaper('letter', 'landscape');
     return $pdf->download('Reporte_General_GDO.pdf');
+}
+public function verCredencial() {
+    // 1. Obtenemos al usuario logueado
+    $user = \Illuminate\Support\Facades\Auth::guard('estudiante')->user();
+
+    // 2. Verificamos que no sea nulo
+    if (!$user) {
+        return redirect()->route('estudiante.login')->with('error', 'Sesión no válida');
+    }
+
+    /** @var \App\Models\Estudiante $user */
+    // Al poner el comentario de arriba, la línea de abajo ya no debería marcar error en rojo
+    $user->load('tutor');
+
+    return view('estudiantes.credencial', ['estudiante' => $user]);
+}
+public function verCalificaciones()
+{
+    // Obtenemos al alumno logueado
+    $estudiante = Auth::guard('estudiante')->user();
+
+    if (!$estudiante) {
+        return redirect()->route('estudiante.login');
+    }
+
+    // Buscamos sus calificaciones
+    $calificaciones = Calificaciones::with('materia')
+        ->where('id_estudiante', $estudiante->id_estudiante)
+        ->get();
+
+    return view('estudiantes.calificaciones', compact('calificaciones'));
 }
 }

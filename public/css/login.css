@@ -1,0 +1,108 @@
+:root {
+    --primary: #5b9036; 
+    --primary-dark: #4a752c;
+    --dark: #2c2c2c;
+    --transition: all 0.8s cubic-bezier(0.7, 0, 0.3, 1);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+
+body {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #1a4a1a; 
+    overflow: hidden;
+}
+
+/* Fondo animado (asegúrate que esté en el HTML) */
+.animated-background {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(135deg, #1a4a1a, #5b9036, #081c15, #2d6a4f);
+    background-size: 400% 400%;
+    animation: gradientShift 12s ease infinite;
+    z-index: -2;
+}
+
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+.overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.5); z-index: -1;
+}
+
+/* LA CAJA PRINCIPAL */
+.main-box {
+    background: white;
+    width: 900px; /* Ancho fijo para que no se estire */
+    height: 580px;
+    border-radius: 30px;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
+    overflow: hidden;
+    position: relative;
+}
+
+/* EL CONTENEDOR QUE SE MUEVE */
+.panel-wrapper {
+    display: flex;
+    width: 200%; /* Esto hace que quepan los dos paneles de 900px cada uno */
+    height: 100%;
+    transition: var(--transition);
+}
+
+/* Posición inicial (Login) */
+.main-box .panel-wrapper { transform: translateX(0); }
+
+/* Posición cuando está en Bienvenida */
+.main-box.active .panel-wrapper { transform: translateX(-50%); }
+
+.panel {
+    width: 50%; /* O sea, el 100% del ancho del main-box */
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 50px;
+}
+
+/* PANEL LOGIN (BLANCO) */
+.login-panel { background: white; }
+.login-content { width: 100%; max-width: 350px; text-align: center; }
+.logo-school { width: 100px; margin-bottom: 20px; }
+
+.input-group { width: 100%; margin-bottom: 20px; text-align: left; }
+.input-wrapper { position: relative; display: flex; align-items: center; }
+.input-wrapper i { position: absolute; left: 15px; color: #5b9036; }
+.input-wrapper input {
+    width: 100%; padding: 15px 15px 15px 45px;
+    border: 2px solid #f0f0f0; border-radius: 15px;
+    outline: none; transition: 0.3s; background: #fafafa;
+}
+.input-wrapper input:focus { border-color: var(--primary); background: white; }
+
+.btn-submit {
+    width: 100%; padding: 15px; background: var(--primary); color: white;
+    border: none; border-radius: 15px; font-weight: 700; cursor: pointer;
+    transition: 0.3s; display: flex; justify-content: center; align-items: center; gap: 10px;
+}
+.btn-submit:hover { background: var(--primary-dark); transform: translateY(-2px); }
+
+/* PANEL BIENVENIDA (VERDE) */
+.welcome-panel {
+    background: linear-gradient(135deg, #1a4a1a 0%, #5b9036 100%);
+    color: white; text-align: center;
+}
+.welcome-content { max-width: 400px; }
+.icon-box { font-size: 4rem; margin-bottom: 20px; }
+.btn-slide {
+    margin-top: 30px; padding: 15px 50px; background: transparent;
+    border: 2px solid white; color: white; border-radius: 40px;
+    font-weight: 600; cursor: pointer; transition: 0.3s;
+}
+.btn-slide:hover { background: white; color: #1a4a1a; }

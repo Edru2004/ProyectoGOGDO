@@ -8,6 +8,8 @@ use App\Models\Materia;
 use App\Models\Grupos;
 use App\Models\Estudiante;
 use App\Models\Tutor;
+use App\Models\Asignaciones; // Asegúrate de importar el modelo
+use App\Models\Calificaciones;
 
 class DocenteController extends Controller
 {
@@ -97,5 +99,47 @@ class DocenteController extends Controller
         'totalEstudiantes', 'totalTutores', 'totalGrupos', 
         'primero', 'segundo', 'tercero', 'recientes'
     ));
+}
+public function dashboard()
+{
+    $docenteId = auth()->guard('docente')->id();
+    
+    // El "with" es lo que hace que el nombre de la materia NO salga vacío
+    $misClases = Asignaciones::with(['materia', 'grupo']) 
+        ->where('id_docente', $docenteId)
+        ->get();
+
+    return view('docentes.dashboard_maestro', compact('misClases'));
+}
+
+// LISTA DE ALUMNOS (Para poner los 3 puntos de la foto)
+public function verlista($id_asignacion) {
+    // 1. Buscamos la materia y el grupo de la asignación
+    $asignacion = Asignaciones::with(['materia', 'grupo'])->findOrFail($id_asignacion);
+
+    // 2. Buscamos a los alumnos que están INSCRITOS en ese grupo
+    // Usamos 'whereHas' para buscar dentro de la relación que tienes en tu modelo
+    $alumnos = Estudiante::whereHas('inscripcion', function($query) use ($asignacion) {
+        $query->where('id_grupo', $asignacion->id_grupo);
+    })->orderBy('apellido_p')->get();
+
+    // 3. Mandamos los datos a tu vista
+    return view('docentes.captura_calificaciones', compact('alumnos', 'asignacion'));
+}
+public function guardarCalificaciones(Request $request)
+{
+    // Aquí recibimos todas las notas del formulario
+    $notas = $request->input('notas');
+
+    foreach ($notas as $id_estudiante => $parciales) {
+        // Lógica para guardar o actualizar en tu tabla de calificaciones
+        // Ejemplo (ajusta según el nombre de tu modelo de calificaciones):
+        // Calificacion::updateOrCreate(
+        //    ['id_estudiante' => $id_estudiante, 'id_materia' => $request->id_materia],
+        //    ['parcial1' => $parciales['n1'], 'parcial2' => $parciales['n2'], 'parcial3' => $parciales['n3']]
+        // );
+    }
+
+    return redirect()->back()->with('success', '¡Calificaciones guardadas correctamente!');
 }
 }
