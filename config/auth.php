@@ -46,7 +46,7 @@ return [
     // AÑADE ESTO:
     'estudiante' => [
         'driver' => 'session',
-        'provider' => 'estudiantes', // Este nombre debe coincidir con el provider de abajo
+        'provider' => 'estudiantes', 
     ],
 
     'docente' => [
@@ -81,7 +81,7 @@ return [
     // AÑADE ESTO:
     'estudiantes' => [
         'driver' => 'eloquent',
-        'model' => App\Models\Estudiante::class, // Tu modelo que acabamos de corregir
+        'model' => App\Models\Estudiante::class, 
     ],
 
     'docentes' => [

@@ -160,18 +160,15 @@ public function verCredencial() {
 }
 public function verCalificaciones()
 {
-    // Obtenemos al alumno logueado
-    $estudiante = Auth::guard('estudiante')->user();
+    // 1. Obtenemos el ID del estudiante logueado
+    $estudianteId = auth()->guard('estudiante')->id();
 
-    if (!$estudiante) {
-        return redirect()->route('estudiante.login');
-    }
-
-    // Buscamos sus calificaciones
-    $calificaciones = Calificaciones::with('materia')
-        ->where('id_estudiante', $estudiante->id_estudiante)
+    // 2. Traemos sus calificaciones con la información de la materia
+    $calificaciones = \App\Models\Calificaciones::with('materia')
+        ->where('id_estudiante', $estudianteId)
         ->get();
 
+    // 3. Retornamos la vista (asegúrate de que la ruta del archivo sea correcta)
     return view('estudiantes.calificaciones', compact('calificaciones'));
 }
 }

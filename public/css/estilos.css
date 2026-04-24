@@ -1,122 +1,108 @@
 :root {
-    /* Paleta estilo AdminLTE - GDO */
-    --sidebar-bg: #6c993e;
-    --sidebar-hover: #7b7c7e;
-    --sidebar-text: #000000; /* Negro para el texto del menú */
-    --content-bg: #ffffff; 
-    --accent-color: #3b8de6; 
+    --sidebar-bg: #6c993e;    /* Verde institucional GDO */
+    --sidebar-hover: rgba(0, 0, 0, 0.15); 
+    --sidebar-text: #000000;
+    --active-item: #00000046;
+    --active-text: #6c993e;
+    --transition-speed: 0.4s;
 }
 
-/* --- ESTILOS BASE --- */
 body {
     margin: 0;
-    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-    background-color: var(--content-bg);
-    overflow: hidden; 
+    font-family: 'Poppins', sans-serif;
+    background-color: #000000;
+    overflow-x: hidden;
 }
 
 .contenedor {
     display: flex;
     height: 100vh;
-    width: 100vw;
 }
 
-/* --- SIDEBAR (MENÚ LATERAL) --- */
+/* --- SIDEBAR MODERNO --- */
 .menu {
-    width: 250px;
+    width: 260px;
     background-color: var(--sidebar-bg);
     color: var(--sidebar-text);
     display: flex;
     flex-direction: column;
-    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    padding: 20px 15px;
+    transition: width var(--transition-speed) cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 4px 0 10px rgba(0,0,0,0.1);
     z-index: 1000;
-    box-shadow: 2px 0 10px rgba(0,0,0,0.1);
 }
 
 .menu.collapsed {
-    width: 75px;
+    width: 85px;
 }
 
+/* Header del Menú */
 .menu-header {
     display: flex;
     align-items: center;
-    padding: 15px 15px;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
+    margin-bottom: 30px;
+    padding: 0 10px;
 }
 
 .toggle-btn {
     background: none;
     border: none;
-    color: white;
-    font-size: 20px;
+    color: rgb(0, 0, 0);
+    font-size: 24px;
     cursor: pointer;
-    transition: opacity 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
-.toggle-btn:hover { opacity: 0.7; }
 
 .menu-title {
-    margin: 0 0 0 15px;
-    font-size: 1.1rem;
-    font-weight: 600;
+    margin-left: 15px;
+    font-size: 1.2rem;
+    font-weight: 700;
     white-space: nowrap;
-    color: white;
+    transition: opacity 0.3s;
 }
 
-/* --- PERFIL USUARIO --- */
+/* Perfil de Usuario Flotante */
 .user-panel {
     display: flex;
     align-items: center;
-    padding: 12px 15px;
-}
-
-.image-wrapper {
-    position: relative;
-    min-width: 45px;
-    height: 45px;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    margin-bottom: 25px;
+    overflow: hidden;
+    transition: all 0.3s;
 }
 
 .user-img {
     width: 45px;
     height: 45px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid rgba(255,255,255,0.2);
+    border-radius: 12px;
+    border: 2px solid white;
+}
+
+.info {
+    margin-left: 15px;
+    white-space: nowrap;
 }
 
 .user-name {
-    margin-left: 15px;
+    display: block;
     font-weight: 600;
-    font-size: 1rem; /* 16px */
-    white-space: nowrap;
-    color: var(--sidebar-text);
+    font-size: 0.95rem;
 }
 
-.sidebar-divider {
-    border-top: 1px solid rgba(0,0,0,0.1);
-    margin: 5px 15px 15px 15px;
-}
-
-/* Ocultar textos al colapsar */
-.menu.collapsed .menu-title,
-.menu.collapsed .user-name,
-.menu.collapsed .text {
-    display: none !important;
-}
-
-/* --- LISTA DE NAVEGACIÓN --- */
-.menu ul { 
-    list-style: none; 
-    padding: 0; 
-    margin: 0; 
+/* Lista de Navegación */
+.menu ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    flex-grow: 1;
 }
 
 .menu li {
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-    transition: background 0.2s;
-    border-radius: 8px;
-    margin: 2px 10px;
+    margin: 10px 0;
 }
 
 .menu li a {
@@ -124,82 +110,48 @@ body {
     color: var(--sidebar-text) !important;
     display: flex;
     align-items: center;
-    width: 100%;
-    padding: 12px 10px;
-    font-size: 1rem; /* 16px */
-    font-weight: 600; /* Semibold */
-    letter-spacing: 0.3px;
+    padding: 12px 15px;
+    border-radius: 12px;
+    transition: all 0.3s ease;
 }
 
-.menu .icon { 
-    min-width: 35px; 
-    font-size: 20px; 
+.menu .icon {
+    min-width: 35px;
+    font-size: 22px;
     display: flex;
     justify-content: center;
 }
 
-/* Hover effects */
-.menu li:hover { 
-    background: var(--sidebar-hover); 
+.menu .text {
+    margin-left: 15px;
+    font-weight: 500;
+    transition: opacity 0.3s;
 }
 
-.menu li:hover a, 
-.menu li:hover a i { 
-    color: white !important;
+/* Efectos Hover y Active */
+.menu li a:hover {
+    background: var(--sidebar-hover);
+    transform: translateX(8px);
 }
 
-/* --- CONTENIDO PRINCIPAL --- */
+.menu li a.active {
+    background: var(--active-item);
+    color: var(--active-text) !important;
+    font-weight: 700;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+/* Ocultar elementos al colapsar */
+.menu.collapsed .menu-title,
+.menu.collapsed .info,
+.menu.collapsed .text {
+    display: none;
+}
+
+/* --- CONTENIDO --- */
 .contenido {
     flex: 1;
+    padding: 30px;
     overflow-y: auto;
-    transition: 0.3s ease;
-    padding: 20px;
-}
-
-/* --- TABLAS Y CONTENEDORES --- */
-.table-container {
-    background-color: white;
-    border-radius: 15px;
-    padding: 15px;
-    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.05);
-    margin: 10px;
-}
-
-.table-custom {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
-}
-
-.table-custom thead th {
-    background-color: #777877 !important;
-    color: #ffffff;
-    font-weight: 600;
-    padding: 12px 10px;
-    text-align: center;
-    font-size: 0.85rem;
-    text-transform: uppercase;
-}
-
-.table-custom tbody td {
-    padding: 12px 10px;
-    text-align: center;
-    border-bottom: 1px solid #f2f2f2;
-    color: #444;
-    font-size: 0.9rem;
-    vertical-align: middle;
-}
-
-/* Botones de acción en tabla */
-.btn-op {
-    background: none;
-    border: none;
-    color: #888;
-    margin: 0 3px;
-    transition: 0.2s;
-    font-size: 1.2rem;
-}
-
-.btn-op:hover {
-    transform: scale(1.1);
+    background-color: #ffffff;
 }

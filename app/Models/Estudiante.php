@@ -33,4 +33,10 @@ class Estudiante extends Authenticatable // Cambiamos la extensión aquí
     public function inscripcion() {
         return $this->hasOne(Inscripciones::class, 'id_estudiante', 'id_estudiante');
     }
+
+    public function calificaciones()
+{
+    // Un estudiante puede tener muchas calificaciones (una por materia)
+    return $this->hasMany(\App\Models\Calificaciones::class, 'id_estudiante', 'id_estudiante');
+}
 }

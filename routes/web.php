@@ -20,6 +20,8 @@ Route::get('/inicio', [EstudianteController::class, 'inicio'])->name('inicio');
 
 // Esta ruta es para que Laravel no marque error si intenta redireccionar al login por defecto
 Route::get('/login', [LoginEstudianteController::class, 'showLoginForm'])->name('login');
+Route::get('/login-docente', [DocenteLoginController::class, 'showLoginForm'])->name('docente.login');
+Route::post('/login-docente', [DocenteLoginController::class, 'login'])->name('docente.login.submit');
 
 // Rutas específicas para el acceso de tus alumnos
 Route::get('/login-estudiante', [LoginEstudianteController::class, 'showLoginForm'])->name('estudiante.login');
@@ -32,6 +34,8 @@ Route::middleware(['auth:estudiante'])->group(function () {
        return view('estudiantes.dashboard');
     })->name('estudiante.dashboard');
 });
+
+Route::get('/mis-calificaciones', [EstudianteController::class, 'verCalificaciones'])->name('estudiante.calificaciones');
 
 // --- EL RESTO DE TUS RUTAS SIGUE ABAJO IGUALITO ---
 // ---------------------------------------------------------
@@ -96,14 +100,15 @@ Route::get('/estudiante/calificaciones', [EstudianteController::class, 'verCalif
 
 Route::middleware(['auth:docente'])->prefix('docente')->name('docente.')->group(function () {
     
-    // Dashboard principal
+    // Dashboard principal del maestro
     Route::get('/dashboard', [DocenteController::class, 'dashboard'])->name('dashboard');
 
-    // Lista de alumnos (Solo deja una de estas, tenías dos)
-    Route::get('/lista/{id_asignacion}', [DocenteController::class, 'verLista'])->name('lista');
+    // Lista de alumnos de una materia específica
+    Route::get('/lista/{id_asignacion}', [DocenteController::class, 'verlista'])->name('lista');
 
-    // CORRECCIÓN AQUÍ: Quita el 'docente/' del URL y deja solo el nombre 'guardar_calificaciones'
+    // Acción de guardar las calificaciones del formulario
     Route::post('/guardar-calificaciones', [DocenteController::class, 'guardarCalificaciones'])->name('guardar_calificaciones');
     
+    // Cerrar sesión
     Route::post('/logout', [DocenteLoginController::class, 'logout'])->name('logout');
 });

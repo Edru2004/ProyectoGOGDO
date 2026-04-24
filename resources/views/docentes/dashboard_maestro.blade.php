@@ -8,13 +8,13 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/dist/css/all.min.css" rel="stylesheet">
     <style>
         body { background-color: #f0f2f5; font-family: 'Segoe UI', sans-serif; }
-        .sidebar { background: linear-gradient(180deg, #28a745 0%, #1e7e34 100%); min-height: 100vh; color: white; position: fixed; width: 250px; }
+        .sidebar { background: linear-gradient(180deg, #23972d 0%, #12662b 100%); min-height: 100vh; color: white; position: fixed; width: 250px; }
         .main-content { margin-left: 250px; padding: 30px; }
         .nav-link { color: rgba(255,255,255,0.8); border-radius: 8px; margin: 5px 15px; transition: 0.3s; }
         .nav-link:hover, .nav-link.active { background: rgba(255,255,255,0.2); color: white; }
         .card-materia { border: none; border-radius: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); transition: 0.3s; }
         .card-materia:hover { transform: translateY(-10px); }
-        .icon-box { width: 50px; height: 50px; background: #e8f5e9; color: #28a745; display: flex; align-items: center; justify-content: center; border-radius: 12px; }
+        .icon-box { width: 50px; height: 50px; background: #e8f5e9; color: #118b2e; display: flex; align-items: center; justify-content: center; border-radius: 12px; }
     </style>
 </head>
 <body>

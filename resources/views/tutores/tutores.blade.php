@@ -29,7 +29,7 @@
                 </div>
                 <div class="col-md-2">
                     <button type="submit" class="btn btn-primary w-100 fw-bold">
-                        <i class="bi bi-filter me-1"></i> Filtrar
+                        <i class="bi bi-filter me-1"></i> buscar
                     </button>
                 </div>
             </form>
@@ -42,6 +42,9 @@
                 <table class="table table-hover mb-0">
                     <thead style="background-color: #f8f9fa;">
                         <tr>
+                            <th class="ps-4" style="width: 50px;">
+                                <input class="form-check-input" type="checkbox" id="selectAllDocentes" style="cursor: pointer; border: 1.5px solid #6c993e;">
+                            </th>
                             <th class="ps-4" style="color: #444; font-weight: 600;">Nombre Completo</th>
                             <th style="color: #444; font-weight: 600;">Parentesco</th>
                             <th style="color: #444; font-weight: 600;">Teléfono</th>
@@ -52,6 +55,10 @@
                     <tbody>
                         @forelse($tutores as $tutor)
                         <tr>
+                            <td class="ps-4">
+    {{-- Cambiamos $doc por $tutor para que reconozca la variable del ciclo --}}
+    <input class="form-check-input doc-checkbox" type="checkbox" value="{{ $tutor->id_tutor }}" style="cursor: pointer; border: 1.5px solid #6c993e;">
+</td>
                             <td class="ps-4 py-3">
                                 <span class="fw-bold text-dark">{{ $tutor->nombre }} {{ $tutor->apellido_p }} {{ $tutor->apellido_m }}</span>
                             </td>

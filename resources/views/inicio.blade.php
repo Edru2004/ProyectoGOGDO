@@ -2,13 +2,23 @@
 
 @section('contenido_dinamico')
 <div class="container-fluid px-4">
-    <div class="row mt-4 mb-4">
-        <div class="col-12 text-center">
-            <h1 class="display-5 fw-bold text-success">Panel de Inicio</h1>
-            <p class="lead text-muted">Bienvenida al Sistema de Control Estudiantil - GDO, Dulce Rubi.</p>
-            <hr class="mx-auto" style="width: 20%; border: 2px solid #198754; opacity: 1;">
+    <div class="row mt-5 mb-4 position-relative">
+        
+        <div style="position: absolute; right: -1300px; top: -70px; z-index: 10;">
+            <img src="{{ asset('imagenes/PNGLOGO.png') }}" alt="Logo GDO" 
+                 style="max-height: 170px; width: auto; filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.1));">
         </div>
+
+        <div class="col-12 text-center">
+            <h1 class="display-5 fw-bold text-success mb-0" style="font-family: 'Poppins', sans-serif;">
+                Panel de Inicio
+            </h1>
+            <p class="lead text-muted">Bienvenida al Sistema de Control Estudiantil - GDO, Dulce Rubi.</p>
+            <hr class="mx-auto" style="width: 15%; border: 2px solid #198754; opacity: 1; border-radius: 10px;">
+        </div>
+
     </div>
+</div>
 
     <div class="row mb-5">
         <div class="col-md-4 mb-3">

@@ -52,6 +52,9 @@
                 <table class="table table-hover mb-0">
                     <thead style="background-color: #f8f9fa;">
                         <tr>
+                             <th class="ps-4" style="width: 50px;">
+                                <input class="form-check-input" type="checkbox" id="selectAllDocentes" style="cursor: pointer; border: 1.5px solid #6c993e;">
+                            </th>
                             <th class="ps-4" style="color: #444; font-weight: 600;">ID</th>
                             <th style="color: #444; font-weight: 600;">Nombre Completo</th>
                             <th style="color: #444; font-weight: 600;">CURP / Email</th>
@@ -60,8 +63,12 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse($estudiantes as $est)
-                        <tr>
+                       @forelse($estudiantes as $est) {{-- Aquí definiste que se llama $est --}}
+<tr>
+    <td class="ps-4">
+        {{-- Cámbialo aquí para que use $est --}}
+        <input class="form-check-input est-checkbox" type="checkbox" value="{{ $est->id_estudiante }}" style="cursor: pointer; border: 1.5px solid #6c993e;">
+    </td>
                             <td class="ps-4 text-muted">{{ $est->id_estudiante }}</td>
                             <td class="py-3">
                                 <span class="fw-bold text-dark">{{ $est->nombre }} {{ $est->apellido_p }} {{ $est->apellido_m }}</span>
