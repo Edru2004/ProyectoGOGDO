@@ -29,7 +29,7 @@
                 </div>
                 <div class="col-md-2">
                     <button type="submit" class="btn btn-primary w-100 fw-bold">
-                        <i class="bi bi-filter me-1"></i> buscar
+                        <i class="bi bi-search me-1"></i> buscar
                     </button>
                 </div>
             </form>

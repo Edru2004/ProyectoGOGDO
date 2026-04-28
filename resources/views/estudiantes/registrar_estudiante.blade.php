@@ -1,22 +1,25 @@
 @extends('Index')
 
 @section('contenido_dinamico')
-<div class="container mt-4">
-    <div class="card shadow-sm border-0">
-        <div class="card-body p-4">
-            <h2 class="fw-bold mb-4" style="color: #2c3e50;">Registrar Nuevo Estudiante</h2>
+<div class="container-fluid mt-4 px-4">
+    <div class="card shadow border-0">
+        <div class="card-header py-3" style="background-color: #808080;"> 
+            <h5 class="text-white mb-0 fw-bold">
+                <i class="bi bi-person-plus-fill me-2"></i> Registrar Nuevo Estudiante
+            </h5>
+        </div>
 
+        <div class="card-body p-4">
             <form action="{{ route('estudiantes.store') }}" method="POST">
                 @csrf
-
                 <div class="row g-3 mb-4">
                     <div class="col-md-4">
                         <label class="form-label fw-bold small">Nombre(s)</label>
-                        <input type="text" name="nombre" class="form-control" placeholder="Ej. Dulce Rubi" required>
+                        <input type="text" name="nombre" class="form-control" placeholder="Ej. Pepe Mariano" required>
                     </div>
                     <div class="col-md-4">
                         <label class="form-label fw-bold small">Apellido Paterno</label>
-                        <input type="text" name="apellido_p" class="form-control" placeholder="Ej. Barragán" required>
+                        <input type="text" name="apellido_p" class="form-control" placeholder="Ej. Perez" required>
                     </div>
                     <div class="col-md-4">
                         <label class="form-label fw-bold small">Apellido Materno</label>
@@ -68,11 +71,11 @@
                 <div class="row g-3 mb-4">
                     <div class="col-md-6">
                         <label class="form-label fw-bold small">Localidad / Colonia</label>
-                        <input type="text" name="localidad" class="form-control" placeholder="Ej. El Moral" required>
+                        <input type="text" name="localidad" class="form-control" placeholder="Ej. San Juan Tuxco" required>
                     </div>
                     <div class="col-md-4">
                         <label class="form-label fw-bold small">Calle</label>
-                        <input type="text" name="calle" class="form-control" placeholder="Ej. Berrocalco">
+                        <input type="text" name="calle" class="form-control" placeholder="Ej. Filemón Sosa" required>
                     </div>
                     <div class="col-md-2">
                         <label class="form-label fw-bold small">Número</label>

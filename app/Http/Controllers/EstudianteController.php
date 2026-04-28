@@ -26,31 +26,46 @@ class EstudianteController extends Controller {
     }
 
     // LISTADO DE ESTUDIANTES
-    public function index(Request $request) {
-        $query = Estudiante::with(['tutor', 'inscripcion.semestre', 'inscripcion.grupo']);
+    // LISTADO DE ESTUDIANTES
+public function index(Request $request) {
+    $query = Estudiante::with(['tutor', 'inscripcion.semestre', 'inscripcion.grupo']);
 
-        if ($request->filled('grado')) {
-            $grado = $request->grado;
-            $semestres = [($grado * 2) - 1, $grado * 2];
-            $query->whereHas('inscripcion', function($q) use ($semestres) {
-                $q->whereIn('id_semestre', $semestres);
-            });
-        }
+    // 1. Filtro por Grado (Año)
+    if ($request->filled('grado')) {
+        $grado = $request->grado;
+        $semestres = [($grado * 2) - 1, $grado * 2]; // Ej: Grado 1 -> Semestres 1 y 2
+        
+        $query->whereHas('inscripcion', function($q) use ($semestres) {
+            $q->whereIn('id_semestre', $semestres);
+        });
+    }
 
-        if ($request->filled('buscar')) {
-            $buscar = $request->buscar;
-            $query->where(function($q) use ($buscar) {
-                $q->where('nombre', 'LIKE', "%{$buscar}%")
+    // 2. Filtro por Grupo (A o B) - NUEVA LÓGICA
+    if ($request->filled('grupo')) {
+        $grupoNombre = $request->grupo;
+        $query->whereHas('inscripcion.grupo', function($q) use ($grupoNombre) {
+            $q->where('nombre_grupo', $grupoNombre);
+        });
+    }
+
+    // 3. Filtro de Búsqueda General
+    if ($request->filled('buscar')) {
+        $buscar = $request->buscar;
+        $query->where(function($q) use ($buscar) {
+            $q->where('nombre', 'LIKE', "%{$buscar}%")
                   ->orWhere('apellido_p', 'LIKE', "%{$buscar}%")
                   ->orWhere('apellido_m', 'LIKE', "%{$buscar}%")
                   ->orWhere('curp', 'LIKE', "%{$buscar}%")
                   ->orWhere('email', 'LIKE', "%{$buscar}%");
-            });
-        }
-
-        $estudiantes = $query->orderBy('apellido_p', 'asc')->paginate(10);
-        return view('estudiantes.estudiantes', compact('estudiantes'));
+        });
     }
+
+    // Ordenar y Paginar
+    // Importante: usamos appends para que la paginación no pierda los filtros de grado y grupo
+    $estudiantes = $query->orderBy('apellido_p', 'asc')->paginate(10);
+    
+    return view('estudiantes.estudiantes', compact('estudiantes'));
+}
 
     public function create() {
         $tutores = Tutor::all();
@@ -171,4 +186,5 @@ public function verCalificaciones()
     // 3. Retornamos la vista (asegúrate de que la ruta del archivo sea correcta)
     return view('estudiantes.calificaciones', compact('calificaciones'));
 }
+
 }

@@ -8,7 +8,8 @@
         </div>
         
         <div class="card-body p-4">
-            <form action="{{ route('estudiantes.update', $estudiante->id_estudiante) }}" method="POST">
+            {{-- Le agregamos un ID al formulario para poder controlarlo con JS --}}
+            <form id="form-update-estudiante" action="{{ route('estudiantes.update', $estudiante->id_estudiante) }}" method="POST">
                 @csrf
                 @method('PUT')
 
@@ -98,10 +99,35 @@
 
                 <div class="text-end mt-4">
                     <a href="{{ route('estudiantes.index') }}" class="btn btn-light border px-4 me-2">Regresar</a>
-                    <button type="submit" class="btn btn-warning px-5 shadow-sm fw-bold">Actualizar Información</button>
+                    {{-- Cambiamos el type a "button" para que no se envíe solo --}}
+                    <button type="button" id="btn-update" class="btn btn-warning px-5 shadow-sm fw-bold">Actualizar Información</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
+
+{{-- Scripts para SweetAlert2 --}}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    document.getElementById('btn-update').addEventListener('click', function() {
+        Swal.fire({
+            title: '¿Deseas guardar los cambios?',
+            text: "Se actualizará la información del estudiante.",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#ffc107', 
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Sí, actualizar',
+            cancelButtonText: 'Cancelar',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Enviamos el formulario si el usuario confirma
+                document.getElementById('form-update-estudiante').submit();
+            }
+        });
+    });
+</script>
 @endsection

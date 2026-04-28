@@ -1,43 +1,45 @@
 @extends('Index')
 
 @section('contenido_dinamico')
-<div class="container py-5">
-    <div class="card shadow-sm border-0">
-        <div class="card-header bg-dark text-white py-3" style="background-color: #2c3e50 !important;">
+<div class="container-fluid py-4 px-4"> {{-- container-fluid para que las orillas se vean bien --}}
+    <div class="card shadow border-0">
+        {{-- Encabezado Gris Oscuro --}}
+        <div class="card-header text-white py-3" style="background-color: #919191;">
             <h4 class="mb-0 fw-bold"><i class="bi bi-person-badge-fill me-2"></i> Registrar Nuevo Docente</h4>
         </div>
 
         <div class="card-body p-4">
-            <form action="{{ route('docentes.store') }}" method="POST">
-               {{-- Esto te dirá qué campo está fallando --}}
-@if ($errors->any())
-    <div class="alert alert-danger">
-        <ul>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
-@endif
+            {{-- Errores de validación --}}
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul class="mb-0">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
 
-<form action="{{ route('tutores.store') }}" method="POST">
-    @csrf
-    {{-- Para que no se borre lo que el usuario escribió, usa value="{{ old('nombre') }}" --}}
-    <div class="col-md-4 mb-3">
-        <label class="form-label fw-bold">Nombre(s)</label>
-        <input type="text" name="nombre" class="form-control" value="{{ old('nombre') }}" required>
-    </div>
-    ...
+            <form action="{{ route('docentes.store') }}" method="POST">
+                @csrf
+
+                {{-- FILA 1: Nombres y Apellidos --}}
+                <div class="row g-3 mb-4"> {{-- Faltaba abrir este row --}}
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold small">Nombre(s)</label>
+                        <input type="text" name="nombre" class="form-control" value="{{ old('nombre') }}" placeholder="Ej. Juan" required>
+                    </div>
                     <div class="col-md-4">
                         <label class="form-label fw-bold small">Apellido Paterno</label>
-                        <input type="text" name="apellido_p" class="form-control" placeholder="Ej. Pérez" required>
+                        <input type="text" name="apellido_p" class="form-control" value="{{ old('apellido_p') }}" placeholder="Ej. Pérez" required>
                     </div>
                     <div class="col-md-4">
                         <label class="form-label fw-bold small">Apellido Materno</label>
-                        <input type="text" name="apellido_m" class="form-control" placeholder="Ej. García">
+                        <input type="text" name="apellido_m" class="form-control" value="{{ old('apellido_m') }}" placeholder="Ej. García">
                     </div>
                 </div>
 
+                {{-- FILA 2: CURP y RFC --}}
                 <div class="row g-3 mb-4">
                     <div class="col-md-6">
                         <label class="form-label fw-bold small">CURP</label>
@@ -49,6 +51,7 @@
                     </div>
                 </div>
 
+                {{-- FILA 3: Email y Contraseña --}}
                 <div class="row g-3 mb-4">
                     <div class="col-md-6">
                         <label class="form-label fw-bold small">Email Institucional</label>
@@ -60,6 +63,7 @@
                     </div>
                 </div>
 
+                {{-- FILA 4: Teléfono y Ubicación --}}
                 <div class="row g-3 mb-4">
                     <div class="col-md-6">
                         <label class="form-label fw-bold small">Teléfono de Contacto</label>
@@ -71,6 +75,7 @@
                     </div>
                 </div>
 
+                {{-- FILA 5: Dirección Detallada --}}
                 <div class="row g-3 mb-4">
                     <div class="col-md-6">
                         <label class="form-label fw-bold small">Localidad / Colonia</label>
@@ -86,6 +91,7 @@
                     </div>
                 </div>
 
+                {{-- FILA 6: Estudios --}}
                 <div class="row g-3 mb-4">
                     <div class="col-md-6">
                         <label class="form-label fw-bold small">Grado de Estudios</label>

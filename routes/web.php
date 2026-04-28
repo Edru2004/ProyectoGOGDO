@@ -111,4 +111,7 @@ Route::middleware(['auth:docente'])->prefix('docente')->name('docente.')->group(
     
     // Cerrar sesión
     Route::post('/logout', [DocenteLoginController::class, 'logout'])->name('logout');
+
+    // Añade esta línea junto a tus otras rutas de estudiantes
+
 });
