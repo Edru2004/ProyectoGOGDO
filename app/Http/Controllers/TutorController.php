@@ -7,30 +7,38 @@ use App\Models\Tutor;
 
 class TutorController extends Controller {
     
-    // Listado de tutores
     public function index() {
         $tutores = Tutor::orderBy('apellido_p', 'asc')->paginate(10);
         return view('tutores.tutores', compact('tutores'));
     }
 
-    // Método para mostrar el formulario de registro (CORRECCIÓN)
     public function create() {
         return view('tutores.registrar_tutores'); 
     }
 
-    // Guardar el tutor en la base de datos
     public function store(Request $request) {
-    $request->validate([
-        'nombre' => 'required',
-        'apellido_p' => 'required',
-        'no_telefono' => 'required', // CAMBIO: Debe coincidir con el "name" de tu input
-        'municipio' => 'required',   // Agrega los que consideres obligatorios
-    ]);
+        $request->validate([
+            'nombre'      => 'required|string|max:50',
+            'apellido_p'  => 'required|string|max:50',
+            'curp'        => 'required|string|size:18|unique:Tutor,curp', // Validación de CURP
+            'no_telefono' => 'required|max:15',
+            
+        ]);
 
-    Tutor::create($request->all());
+        $data = $request->all();
 
-    return redirect()->route('tutores.index')->with('success', 'Tutor registrado correctamente.');
-}
+        // Lógica para el parentesco "Otro"
+        if ($request->parentesco === 'Otro' && $request->filled('parentesco_otro')) {
+            $data['parentesco'] = $request->parentesco_otro;
+        }
+
+        // Aseguramos que la CURP se guarde en mayúsculas
+        $data['curp'] = strtoupper($request->curp);
+
+        Tutor::create($data);
+
+        return redirect()->route('tutores.index')->with('success', 'Tutor registrado correctamente.');
+    }
 
     public function edit($id) {
         $tutor = Tutor::findOrFail($id);
@@ -39,8 +47,26 @@ class TutorController extends Controller {
 
     public function update(Request $request, $id) {
         $tutor = Tutor::findOrFail($id);
-        $tutor->update($request->all());
-        return redirect()->route('tutores.index')->with('success', 'Tutor actualizado.');
+
+        $request->validate([
+            'nombre'      => 'required|string|max:50',
+            'apellido_p'  => 'required|string|max:50',
+            'curp'        => 'required|string|size:18|unique:Tutor,curp,' . $id . ',id_tutor', // Ignora el ID actual al validar único
+            'no_telefono' => 'required|max:15',
+        ]);
+
+        $data = $request->all();
+
+        // Lógica para parentesco personalizado en edición
+        if ($request->parentesco === 'Otro' && $request->filled('parentesco_otro')) {
+            $data['parentesco'] = $request->parentesco_otro;
+        }
+
+        $data['curp'] = strtoupper($request->curp);
+
+        $tutor->update($data);
+
+        return redirect()->route('tutores.index')->with('success', 'Información del tutor actualizada correctamente.');
     }
 
     public function show($id) {

@@ -70,7 +70,8 @@ Route::put('/docentes/{id}', [DocenteController::class, 'update'])->name('docent
 Route::delete('/docentes/{id}', [DocenteController::class, 'destroy'])->name('docentes.destroy');
 Route::get('/docentes/{id}/horario', [DocenteController::class, 'crearHorario'])->name('docentes.horario');
 // Esta línea es la que le da nombre a la ruta para que el botón funcione
-
+Route::get('/docentes/{id}/descargar-horario', [DocenteController::class, 'descargarHorario'])
+     ->name('docentes.descargarHorario');
 Route::resource('docentes', App\Http\Controllers\DocenteController::class);
 Route::get('/docentes/{id}/horario', [DocenteController::class, 'crearHorario'])->name('docentes.crearHorario');
 // ---------------------------------------------------------

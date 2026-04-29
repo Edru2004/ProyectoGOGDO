@@ -83,15 +83,17 @@
                     </div>
                 </div>
 
-                <div class="mb-4">
-                    <label class="form-label fw-bold text-primary small">Asignar Tutor Responsable</label>
-                    <select name="id_tutor" class="form-select" required>
-                        <option value="" selected disabled>Selecciona un tutor...</option>
-                        @foreach($tutores as $tutor)
-                            <option value="{{ $tutor->id_tutor }}">{{ $tutor->nombre }} {{ $tutor->apellido_p }}</option>
-                        @endforeach
-                    </select>
-                </div>
+             <div class="col-12">
+    <label class="form-label fw-bold text-primary">Asignar Tutor Responsable</label>
+    <select name="id_tutor" id="id_tutor" class="form-select" required>
+        <option value=""></option>
+        @foreach($tutores as $tutor)
+            <option value="{{ $tutor->id_tutor }}">
+                {{ $tutor->curp }} - {{ $tutor->nombre }} {{ $tutor->apellido_p }}
+            </option>
+        @endforeach
+    </select>
+</div>
 
                 <hr class="my-4">
 
@@ -123,4 +125,19 @@
         </div>
     </div>
 </div>
+<!-- Cargar el CSS de Select2 -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<!-- Cargar el JS de Select2 -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        $('#id_tutor').select2({
+            placeholder: "Escribe la CURP o Nombre del tutor...",
+            allowClear: true,
+            width: '100%'
+        });
+    });
+</script>
 @endsection

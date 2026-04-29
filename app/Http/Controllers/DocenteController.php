@@ -9,7 +9,7 @@ use App\Models\Grupos;
 use App\Models\Estudiante;
 use App\Models\Tutor;
 use App\Models\Asignaciones; // Asegúrate de importar el modelo
-
+use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\Calificaciones;
 
 class DocenteController extends Controller
@@ -39,12 +39,20 @@ class DocenteController extends Controller
     }
 
     // Método para ver el expediente del docente
-   public function show($id)
+ // app/Http/Controllers/DocenteController.php
+
+public function show($id)
 {
-    // Eager Loading: Trae al docente con sus asignaciones, y de esas asignaciones trae la materia y el grupo
-    $docente = Docente::with(['asignaciones.materia', 'asignaciones.grupo'])->findOrFail($id);
-    
-    return view('docentes.ver_docente', compact('docente'));
+    // Buscamos al docente (ej. Petra García) por su ID
+    $docente = Docente::findOrFail($id);
+
+    // Buscamos todas sus clases asignadas y traemos de una vez la materia y el grupo
+    $asignaciones = Asignaciones::where('id_docente', $id)
+                        ->with(['materia', 'grupo'])
+                        ->get();
+
+    // Enviamos a la vista 'ver_docente.blade.php' tanto al docente como sus asignaciones
+    return view('docentes.ver_docente', compact('docente', 'asignaciones'));
 }
 
     // Método para mostrar el formulario de edición
@@ -149,5 +157,20 @@ public function guardarCalificaciones(Request $request) {
         );
     }
     return redirect()->back()->with('success', '¡Lista del GDO actualizada!');
+}
+ // No olvides importar esto arriba
+
+public function descargarHorario($id)
+{
+    $docente = Docente::findOrFail($id);
+    $asignaciones = Asignaciones::where('id_docente', $id)
+                        ->with(['materia', 'grupo.semestre'])
+                        ->get();
+
+    // Cargamos una vista especial para el PDF
+    $pdf = Pdf::loadView('docentes.pdf_horario', compact('docente', 'asignaciones'));
+
+    // Descarga el archivo con el nombre del maestro
+    return $pdf->download('Horario_'.$docente->apellido_p.'.pdf');
 }
 }

@@ -24,6 +24,16 @@
                         <label class="form-label fw-bold">Apellido Materno</label>
                         <input type="text" name="apellido_m" class="form-control" placeholder="Ej. García">
                     </div>
+                    <div class="row">
+                    <div class="col-md-12 mb-3">
+    <label class="form-label fw-bold small">CURP</label>
+    <input type="text" name="curp" class="form-control" 
+           value="{{ old('curp') }}" 
+           maxlength="18" 
+           style="text-transform: uppercase;" 
+           placeholder="18 caracteres" required>
+</div>
+                    </div>
                 </div>
 
                 <div class="row align-items-end">
@@ -52,8 +62,8 @@
                     </div>
                     <div class="col-md-6 mb-3">
                         <label class="form-label fw-bold">Municipio y Estado</label>
-                        <input type="text" name="municipio" class="form-control" placeholder="Ej. San Martín Texmelucan, Puebla" required>
-                    </div>
+<!-- Busca esta línea en tu formulario y asegúrate de que diga name="municipio" -->
+<input type="text" name="municipio" class="form-control" value="{{ old('municipio', $tutor->municipio ?? '') }}">                    </div>
                 </div>
 
                 <div class="row">

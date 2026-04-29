@@ -14,14 +14,15 @@ class Tutor extends Model
     public $timestamps = false;
 
 protected $fillable = [
-    'nombre', 
-    'apellido_p', 
-    'apellido_m', 
-    'parentesco', 
-    'no_telefono', 
-    'municipio',  // Cambiado de ciudad
-    'localidad',  // Nuevo
-    'calle', 
+    'nombre',
+    'apellido_p',
+    'apellido_m',
+    'curp', // <--- Agrega esto
+    'parentesco',
+    'no_telefono',
+    'municipio',
+    'ciudad',
+    'calle',
     'numero'
 ];
 

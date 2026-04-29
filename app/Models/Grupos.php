@@ -13,5 +13,13 @@ class Grupos extends Model
     protected $primaryKey = 'id_grupo';
     public $timestamps = false;
 
-    protected $fillable = ['nombre_grupo'];
+// app/Models/Grupos.php
+protected $fillable = ['nombre_grupo', 'id_semestre']; // <-- Agrega id_semestre aquí
+    public function semestre()
+{
+    // Un grupo pertenece a un semestre
+    return $this->belongsTo(Semestre::class, 'id_semestre', 'id_semestre');
+}
+
+
 }

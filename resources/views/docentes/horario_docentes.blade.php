@@ -31,22 +31,40 @@
                             @endforeach
                         </select>
                     </div>
-                    <div class="col-md-6">
-                        <label class="form-label fw-bold">Grupo</label>
-                        <select name="id_grupo" class="form-select" required>
-                            <option value="">-- Seleccione Grupo --</option>
-                            @foreach($grupos as $g)
-                                <option value="{{ $g->id_grupo }}">{{ $g->nombre_grupo }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
+                    <div class="row mb-3">
+    <!-- Selección de Semestre -->
+    <div class="col-md-6">
+        <label class="form-label fw-bold">Semestre</label>
+        <select name="semestre" id="select-semestre" class="form-select" required>
+            <option value="">-- Seleccione Semestre --</option>
+            <option value="1">Primero</option>
+            <option value="2">Segundo</option>
+            <option value="3">Tercero</option>
+            <option value="4">Cuarto</option>
+            <option value="5">Quinto</option>
+            <option value="6">Sexto</option>
+        </select>
+    </div>
+
+    <!-- Selección de Grupo -->
+    <div class="col-md-6">
+        <label class="form-label fw-bold">Grupo</label>
+        <select name="id_grupo" id="select-grupo" class="form-select" required>
+            <option value="">-- Seleccione Grupo --</option>
+            @foreach($grupos as $g)
+                {{-- Agregamos un atributo data-semestre para poder filtrar con JavaScript --}}
+                <option value="{{ $g->id_grupo }}" data-semestre="{{ $g->semestre }}">
+                    Grupo {{ $g->nombre_grupo }}
+                </option>
+            @endforeach
+        </select>
+    </div>
+</div>
 
                 <div class="row mb-3">
                     <div class="col-md-4">
                         <label class="form-label fw-bold">Día</label>
-                        <select name="dia_semana" class="form-select" required>
-                            <option value="Lunes">Lunes</option>
+<select name="dia_semana" class="form-select" required> {{-- Asegúrate que diga dia_semana --}}                            <option value="Lunes">Lunes</option>
                             <option value="Martes">Martes</option>
                             <option value="Miercoles">Miércoles</option> 
                             <option value="Jueves">Jueves</option>

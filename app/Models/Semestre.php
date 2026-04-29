@@ -13,4 +13,5 @@ class Semestre extends Model {
         if ($this->id_semestre <= 4) return "2do Año";
         return "3er Año";
     }
+    
 }

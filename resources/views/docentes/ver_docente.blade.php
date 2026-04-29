@@ -32,31 +32,52 @@
                     <h5 class="text-success mb-0 fw-bold">
                         <i class="bi bi-calendar-check"></i> Carga Académica Actual
                     </h5>
+                    <a href="{{ route('docentes.descargarHorario', $docente->id_docente) }}" class="btn btn-danger btn-sm">
+            <i class="bi bi-file-earmark-pdf"></i> Descargar PDF
+        </a>
                     <a href="{{ route('docentes.crearHorario', $docente->id_docente) }}" class="btn btn-outline-success btn-sm">
                         <i class="bi bi-plus-lg"></i> Agregar Clase
                     </a>
                 </div>
                 <div class="card-body">
-                    <table class="table table-hover">
-                        <thead>
-                            <tr>
-                                <th>Materia</th>
-                                <th>Grupo</th>
-                                <th>Día</th>
-                                <th>Horario</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($docente->asignaciones as $asig)
-                            <tr>
-                                <td class="text-primary fw-bold">{{ $asig->materia->nombre_materia }}</td>
-                                <td>{{ $asig->grupo->nombre_grupo }}</td>
-                                <td>{{ $asig->dia }}</td>
-                                <td>{{ $asig->hora_inicio }} - {{ $asig->hora_fin }}</td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+                   <table class="table table-hover">
+    <thead class="table-light">
+        <tr>
+            <th>Materia</th>
+            <th>Semestre</th>
+            <th>Grupo</th>
+            <th>Día</th>
+            <th>Horario</th>
+            <th>Salón</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach($asignaciones as $a)
+        <tr>
+            {{-- Materia --}}
+            <td class="fw-bold text-primary">{{ $a->materia->nombre_materia }}</td>
+            
+            {{-- Semestre (Obtenido a través de la relación con el Grupo) --}}
+<td>{{ $a->grupo->semestre->nombre_semestre ?? 'N/A' }}</td>     
+            {{-- Grupo --}}
+            <td>{{ $a->grupo->nombre_grupo }}</td>
+            
+            {{-- Día (Asegúrate de usar 'dia_semana' como en tu modelo) --}}
+            <td>{{ $a->dia_semana }}</td>
+            
+            {{-- Horario --}}
+            <td>{{ $a->hora_inicio }} - {{ $a->hora_fin }}</td>
+            
+            {{-- Salón --}}
+            <td>
+                <span class="badge bg-info text-dark">
+                    <i class="bi bi-geo-alt"></i> {{ $a->aula }}
+                </span>
+            </td>
+        </tr>
+        @endforeach
+    </tbody>
+</table>
                 </div>
             </div>
         </div>

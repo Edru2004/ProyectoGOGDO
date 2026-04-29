@@ -20,11 +20,19 @@ class AsignacionesController extends Controller
      return view('docentes.horario_docentes', compact('docente', 'materias', 'grupos'));
 }
 
-    public function store(Request $request)
-    {
-        // Guardamos la asignación (el horario)
-        Asignaciones::create($request->all());
-        
-        return redirect()->route('docentes.index')->with('status', 'Horario asignado con éxito');
-    }
+   public function store(Request $request)
+{
+    // Validamos que el día sea uno de los permitidos
+    $request->validate([
+        'dia_semana' => 'required|string|max:20',
+        'hora_inicio' => 'required',
+        'hora_fin' => 'required',
+        'id_docente' => 'required|exists:docente,id_docente',
+    ]);
+
+    // Si pasa la validación, guardamos
+    Asignaciones::create($request->all());
+
+    return redirect()->route('docentes.index')->with('status', 'Horario asignado con éxito');
+}
 }
