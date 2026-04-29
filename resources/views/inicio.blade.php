@@ -9,6 +9,10 @@
                  style="max-height: 120px; width: auto; filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.1));">
         </div>
 
+        <div class="col-12 text-center position-relative">
+    {{-- Botón de Modo Oscuro --}}
+  
+
         <div class="col-12 text-center">
             <h1 class="display-5 fw-bold text-success mb-0" style="font-family: 'Poppins', sans-serif;">
                 Panel de Inicio
@@ -17,6 +21,7 @@
             <hr class="mx-auto" style="width: 15%; border: 2px solid #198754; opacity: 1; border-radius: 10px;">
         </div>
     </div>
+
 
     {{-- Tarjetas con botón de Inspeccionar --}}
     <div class="row mb-5">
@@ -202,6 +207,30 @@
         chartInstance = new Chart(ctx, config);
         modal.show();
     }
+
+    // --- Lógica del Modo Oscuro ---
+const btnTheme = document.getElementById('btn-theme');
+const themeIcon = document.getElementById('theme-icon');
+const body = document.body;
+
+// 1. Revisar si ya existe una preferencia guardada
+if (localStorage.getItem('theme') === 'dark') {
+    body.classList.add('dark-mode');
+    themeIcon.classList.replace('bi-moon-stars-fill', 'bi-sun-fill');
+}
+
+// 2. Escuchar el click del botón
+btnTheme.addEventListener('click', () => {
+    body.classList.toggle('dark-mode');
+    
+    if (body.classList.contains('dark-mode')) {
+        themeIcon.classList.replace('bi-moon-stars-fill', 'bi-sun-fill');
+        localStorage.setItem('theme', 'dark');
+    } else {
+        themeIcon.classList.replace('bi-sun-fill', 'bi-moon-stars-fill');
+        localStorage.setItem('theme', 'light');
+    }
+});
 </script>
 
 <style>
