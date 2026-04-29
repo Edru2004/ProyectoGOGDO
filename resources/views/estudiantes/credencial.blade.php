@@ -6,7 +6,7 @@
         <div class="col-md-8 mt-4">
             <div class="card shadow-lg" style="border-radius: 20px; border: none; overflow: hidden;">
                 <div style="background: #5b9036; color: white; padding: 20px; text-align: center;">
-                    <h4 class="mb-0 fw-bold">BACHILLERATO GUSTAVO DÍAZ ORDAZ</h4>
+                    <h4 class="mb-0 fw-bold">BACHILLERATO GENERAL OFICIAL GUSTAVO DÍAZ ORDAZ</h4>
                     <small class="text-uppercase tracking-wider">Credencial Digital del Estudiante</small>
                 </div>
 

@@ -88,32 +88,32 @@ Route::middleware(['auth'])->group(function () {
 |--------------------------------------------------------------------------
 */
 
-Route::middleware(['auth:docente'])->prefix('docente')->name('docente.')->group(function () {
-    
+Route::middleware(['auth:docente'])->prefix('docente')->name('docente.')->group(function () {    
     Route::get('/dashboard', [DocenteController::class, 'dashboard'])->name('dashboard');
     Route::get('/lista/{id_asignacion}', [DocenteController::class, 'verlista'])->name('lista');
     Route::post('/guardar-calificaciones', [DocenteController::class, 'guardarCalificaciones'])->name('guardar_calificaciones');
     
     // Logout específico para docente
-    Route::post('/logout', [DocenteLoginController::class, 'logout'])->name('logout');
-});
-
+Route::post('/logout', [App\Http\Controllers\Auth\LoginEstudianteController::class, 'logout'])->name('logout');});
 
 /*
 |--------------------------------------------------------------------------
-| 4. PANEL DE ESTUDIANTES (Protegido por Middleware 'auth:estudiante')
+| PANEL DE ESTUDIANTES
 |--------------------------------------------------------------------------
 */
+Route::middleware(['auth:estudiante'])->group(function () {    
+    // Esta será tu página principal de inicio
+    Route::get('/estudiante/inicio', function () {
+        return view('estudiantes.inicio_estudiantes');
+    })->name('estudiante.inicio_estudiantes');
 
-Route::middleware(['auth:estudiante'])->group(function () {
-    
-    Route::get('/estudiante/dashboard', function () { 
-        return view('estudiantes.dashboard'); 
+    // Si usas 'estudiante.dashboard' en otros lados, asegúrate de que apunte a una función real
+    Route::get('/estudiante/dashboard', function () {
+        return view('estudiantes.inicio_estudiantes'); 
     })->name('estudiante.dashboard');
 
     Route::get('/estudiante/credencial', [EstudianteController::class, 'verCredencial'])->name('estudiante.credencial');
     Route::get('/estudiante/calificaciones', [EstudianteController::class, 'verCalificaciones'])->name('estudiante.calificaciones');
     
-    // Logout específico para estudiante
     Route::post('/logout-estudiante', [LoginEstudianteController::class, 'logout'])->name('estudiante.logout');
 });

@@ -16,7 +16,7 @@ body {
     overflow: hidden;
 }
 
-/* Fondo animado (asegúrate que esté en el HTML) */
+/* Fondo animado */
 .animated-background {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
     background: linear-gradient(135deg, #1a4a1a, #5b9036, #081c15, #2d6a4f);
@@ -36,33 +36,28 @@ body {
     background: rgba(0, 0, 0, 0.5); z-index: -1;
 }
 
-/* LA CAJA PRINCIPAL */
+/* CAJA PRINCIPAL */
 .main-box {
     background: white;
-    width: 900px; /* Ancho fijo para que no se estire */
+    width: 900px;
     height: 580px;
-    border-radius: 30px;
+    border-radius: 40px; /* Bordes más redondeados */
     box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
     overflow: hidden;
     position: relative;
 }
 
-/* EL CONTENEDOR QUE SE MUEVE */
 .panel-wrapper {
     display: flex;
-    width: 200%; /* Esto hace que quepan los dos paneles de 900px cada uno */
+    width: 200%;
     height: 100%;
     transition: var(--transition);
 }
 
-/* Posición inicial (Login) */
-.main-box .panel-wrapper { transform: translateX(0); }
-
-/* Posición cuando está en Bienvenida */
 .main-box.active .panel-wrapper { transform: translateX(-50%); }
 
 .panel {
-    width: 50%; /* O sea, el 100% del ancho del main-box */
+    width: 50%;
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -71,38 +66,90 @@ body {
     padding: 50px;
 }
 
-/* PANEL LOGIN (BLANCO) */
-.login-panel { background: white; }
+/* --- PANEL LOGIN (ESTILO MEJORADO) --- */
+.login-panel { background: rgba(243, 242, 242, 0.944); padding: 60px !important; }
 .login-content { width: 100%; max-width: 350px; text-align: center; }
-.logo-school { width: 100px; margin-bottom: 20px; }
+.logo-school { width: 110px; margin-bottom: 15px; }
 
-.input-group { width: 100%; margin-bottom: 20px; text-align: left; }
-.input-wrapper { position: relative; display: flex; align-items: center; }
-.input-wrapper i { position: absolute; left: 15px; color: #5b9036; }
-.input-wrapper input {
-    width: 100%; padding: 15px 15px 15px 45px;
-    border: 2px solid #f0f0f0; border-radius: 15px;
-    outline: none; transition: 0.3s; background: #fafafa;
+.login-content h2 { color: #156031; font-weight: 700; font-size: 1.8rem; margin-bottom: 5px; }
+.login-content p { color: #000000 !important; margin-bottom: 30px !important; }
+
+.input-group { width: 100%; margin-bottom: 18px; text-align: left; }
+.input-group label { 
+    font-size: 0.75rem !important; 
+    font-weight: 700 !important; 
+    color: #000000; 
+    margin-bottom: 8px; 
+    display: block; 
 }
-.input-wrapper input:focus { border-color: var(--primary); background: white; }
+
+.input-wrapper { position: relative; display: flex; align-items: center; }
+.input-wrapper i { position: absolute; left: 18px; color: var(--primary); font-size: 1.1rem; }
+
+.input-wrapper input {
+    width: 100%; padding: 14px 15px 14px 50px;
+    border: 1px solid #e2e8f0; border-radius: 12px;
+    outline: none; transition: 0.3s; background: #f8fafc;
+}
+
+.input-wrapper input:focus { 
+    border-color: var(--primary); 
+    background: white; 
+    box-shadow: 0 0 0 4px rgba(91, 144, 54, 0.1); 
+}
 
 .btn-submit {
     width: 100%; padding: 15px; background: var(--primary); color: white;
     border: none; border-radius: 15px; font-weight: 700; cursor: pointer;
     transition: 0.3s; display: flex; justify-content: center; align-items: center; gap: 10px;
+    box-shadow: 0 4px 12px rgba(91, 144, 54, 0.2);
 }
-.btn-submit:hover { background: var(--primary-dark); transform: translateY(-2px); }
 
-/* PANEL BIENVENIDA (VERDE) */
+.btn-submit:hover { 
+    background: var(--primary-dark); 
+    transform: translateY(-2px); 
+    box-shadow: 0 6px 15px rgba(91, 144, 54, 0.3);
+}
+
+#btnBack {
+    margin-top: 25px; cursor: pointer; color: #555 !important; 
+    font-size: 0.9rem; font-weight: 500; transition: 0.3s;
+}
+#btnBack:hover { color: var(--primary) !important; text-decoration: underline; }
+
+/* --- PANEL BIENVENIDA (ESTILO CRISTAL) --- */
 .welcome-panel {
-    background: linear-gradient(135deg, #1a4a1a 0%, #5b9036 100%);
-    color: white; text-align: center;
+    background: linear-gradient(135deg, #1b331a 0%, #3e6b35 100%) !important;
+    color: white; text-align: center; position: relative; overflow: hidden;
 }
-.welcome-content { max-width: 400px; }
-.icon-box { font-size: 4rem; margin-bottom: 20px; }
+
+.welcome-content {
+    max-width: 420px;
+    padding: 45px 35px;
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 40px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+}
+
+.logo-container {
+    background: white; width: 130px; height: 130px;
+    margin: 0 auto 25px; border-radius: 25px;
+    display: flex; justify-content: center; align-items: center;
+    padding: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+
+.logo-img { max-width: 100%; max-height: 100%; object-fit: contain; }
+
+.welcome-content h1 { font-size: 2.1rem; font-weight: 800; line-height: 1.1; margin-bottom: 15px; letter-spacing: 1px; }
+.welcome-content p { font-size: 0.95rem; color: rgba(255, 255, 255, 0.9); margin-bottom: 35px; font-weight: 300; }
+
 .btn-slide {
-    margin-top: 30px; padding: 15px 50px; background: transparent;
-    border: 2px solid white; color: white; border-radius: 40px;
-    font-weight: 600; cursor: pointer; transition: 0.3s;
+    padding: 12px 45px; background: transparent;
+    border: 2px solid rgba(255, 255, 255, 0.8); color: white;
+    border-radius: 50px; font-weight: 700; cursor: pointer; transition: 0.3s;
 }
-.btn-slide:hover { background: white; color: #1a4a1a; }
+
+.btn-slide:hover { background: white; color: #244122; transform: scale(1.05); }

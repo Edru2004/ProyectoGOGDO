@@ -1,0 +1,157 @@
+:root {
+    --sidebar-bg: #6c993e;    /* Verde institucional GDO */
+    --sidebar-hover: rgba(0, 0, 0, 0.15); 
+    --sidebar-text: #000000;
+    --active-item: #00000046;
+    --active-text: #6c993e;
+    --transition-speed: 0.4s;
+}
+
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background-color: #000000;
+    overflow-x: hidden;
+}
+
+.contenedor {
+    display: flex;
+    height: 100vh;
+}
+
+/* --- SIDEBAR MODERNO --- */
+.menu {
+    width: 260px;
+    background-color: var(--sidebar-bg);
+    color: var(--sidebar-text);
+    display: flex;
+    flex-direction: column;
+    padding: 20px 15px;
+    transition: width var(--transition-speed) cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 4px 0 10px rgba(0,0,0,0.1);
+    z-index: 1000;
+}
+
+.menu.collapsed {
+    width: 85px;
+}
+
+/* Header del Menú */
+.menu-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 30px;
+    padding: 0 10px;
+}
+
+.toggle-btn {
+    background: none;
+    border: none;
+    color: rgb(0, 0, 0);
+    font-size: 24px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.menu-title {
+    margin-left: 15px;
+    font-size: 1.2rem;
+    font-weight: 700;
+    white-space: nowrap;
+    transition: opacity 0.3s;
+}
+
+/* Perfil de Usuario Flotante */
+.user-panel {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    margin-bottom: 25px;
+    overflow: hidden;
+    transition: all 0.3s;
+}
+
+.user-img {
+    width: 45px;
+    height: 45px;
+    border-radius: 12px;
+    border: 2px solid white;
+}
+
+.info {
+    margin-left: 15px;
+    white-space: nowrap;
+}
+
+.user-name {
+    display: block;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+/* Lista de Navegación */
+.menu ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    flex-grow: 1;
+}
+
+.menu li {
+    margin: 10px 0;
+}
+
+.menu li a {
+    text-decoration: none !important;
+    color: var(--sidebar-text) !important;
+    display: flex;
+    align-items: center;
+    padding: 12px 15px;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+.menu .icon {
+    min-width: 35px;
+    font-size: 22px;
+    display: flex;
+    justify-content: center;
+}
+
+.menu .text {
+    margin-left: 15px;
+    font-weight: 500;
+    transition: opacity 0.3s;
+}
+
+/* Efectos Hover y Active */
+.menu li a:hover {
+    background: var(--sidebar-hover);
+    transform: translateX(8px);
+}
+
+.menu li a.active {
+    background: var(--active-item);
+    color: var(--active-text) !important;
+    font-weight: 700;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+/* Ocultar elementos al colapsar */
+.menu.collapsed .menu-title,
+.menu.collapsed .info,
+.menu.collapsed .text {
+    display: none;
+}
+
+/* --- CONTENIDO --- */
+.contenido {
+    flex: 1;
+    padding: 30px;
+    overflow-y: auto;
+    background-color: #ffffff;
+}
