@@ -2,7 +2,6 @@
 
 @section('contenido_dinamico')
 <div class="container mt-4">
-    
     <div class="mb-3">
         <a href="{{ route('docentes.index') }}" class="btn btn-outline-secondary shadow-sm">
             <i class="bi bi-arrow-left-circle"></i> Volver al Listado
@@ -31,40 +30,41 @@
                             @endforeach
                         </select>
                     </div>
-                    <div class="row mb-3">
-    <!-- Selección de Semestre -->
-    <div class="col-md-6">
-        <label class="form-label fw-bold">Semestre</label>
-        <select name="semestre" id="select-semestre" class="form-select" required>
-            <option value="">-- Seleccione Semestre --</option>
-            <option value="1">Primero</option>
-            <option value="2">Segundo</option>
-            <option value="3">Tercero</option>
-            <option value="4">Cuarto</option>
-            <option value="5">Quinto</option>
-            <option value="6">Sexto</option>
-        </select>
-    </div>
 
-    <!-- Selección de Grupo -->
-    <div class="col-md-6">
-        <label class="form-label fw-bold">Grupo</label>
-        <select name="id_grupo" id="select-grupo" class="form-select" required>
-            <option value="">-- Seleccione Grupo --</option>
-            @foreach($grupos as $g)
-                {{-- Agregamos un atributo data-semestre para poder filtrar con JavaScript --}}
-                <option value="{{ $g->id_grupo }}" data-semestre="{{ $g->semestre }}">
-                    Grupo {{ $g->nombre_grupo }}
-                </option>
-            @endforeach
-        </select>
-    </div>
-</div>
+                    <!-- Selección de Semestre -->
+                    <div class="col-md-3">
+                        <label class="form-label fw-bold">Semestre</label>
+                        <select id="select-semestre" class="form-select" required>
+                            <option value="">-- Seleccione Semestre --</option>
+                            <option value="1">Primero</option>
+                            <option value="2">Segundo</option>
+                            <option value="3">Tercero</option>
+                            <option value="4">Cuarto</option>
+                            <option value="5">Quinto</option>
+                            <option value="6">Sexto</option>
+                        </select>
+                    </div>
+
+                    <!-- Selección de Grupo -->
+                    <div class="col-md-3">
+                        <label class="form-label fw-bold">Grupo</label>
+                        <select name="id_grupo" id="select-grupo" class="form-select" required>
+                            <option value="">-- Seleccione Grupo --</option>
+                            @foreach($grupos as $g)
+                                {{-- IMPORTANTE: Usamos id_semestre porque así está en tu DB --}}
+                                <option value="{{ $g->id_grupo }}" data-semestre="{{ $g->id_semestre }}">
+                                    {{ $g->id_semestre }}° {{ $g->nombre_grupo }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
 
                 <div class="row mb-3">
                     <div class="col-md-4">
                         <label class="form-label fw-bold">Día</label>
-<select name="dia_semana" class="form-select" required> {{-- Asegúrate que diga dia_semana --}}                            <option value="Lunes">Lunes</option>
+                        <select name="dia_semana" class="form-select" required>
+                            <option value="Lunes">Lunes</option>
                             <option value="Martes">Martes</option>
                             <option value="Miercoles">Miércoles</option> 
                             <option value="Jueves">Jueves</option>
@@ -99,4 +99,27 @@
         </div>
     </div>
 </div>
+
+{{-- SCRIPT PARA FILTRAR GRUPOS POR SEMESTRE --}}
+<script>
+document.getElementById('select-semestre').addEventListener('change', function() {
+    const semestreSeleccionado = this.value;
+    const selectGrupo = document.getElementById('select-grupo');
+    const opciones = selectGrupo.querySelectorAll('option');
+
+    opciones.forEach(opcion => {
+        if (opcion.value === "") return; // No ocultar el "Seleccione Grupo"
+
+        if (opcion.getAttribute('data-semestre') === semestreSeleccionado) {
+            opcion.style.display = 'block';
+        } else {
+            opcion.style.display = 'none';
+        }
+    });
+
+    // Resetear el select de grupo al cambiar de semestre
+    selectGrupo.value = "";
+});
+</script>
+
 @endsection

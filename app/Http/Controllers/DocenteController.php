@@ -113,12 +113,13 @@ public function dashboard()
 {
     $docenteId = auth()->guard('docente')->id();
     
-    // El "with" es lo que hace que el nombre de la materia NO salga vacío
+    // El "with" asegura que traigas la relación de materia y grupo
     $misClases = Asignaciones::with(['materia', 'grupo']) 
         ->where('id_docente', $docenteId)
         ->get();
 
-    return view('docentes.dashboard_maestro', compact('misClases'));
+    // CAMBIO CLAVE: Retorna 'clases_docente', NO el dashboard_maestro
+    return view('docentes.clases_docente', compact('misClases'));
 }
 
 // LISTA DE ALUMNOS (Para poner los 3 puntos de la foto)

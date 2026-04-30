@@ -84,17 +84,35 @@ Route::middleware(['auth'])->group(function () {
 
 /*
 |--------------------------------------------------------------------------
-| 3. PANEL DE DOCENTES (Protegido por Middleware 'auth:docente')
+| PANEL DE DOCENTES (Protegido por Middleware 'auth:docente')
 |--------------------------------------------------------------------------
 */
+Route::middleware(['auth:docente'])->prefix('docente')->name('docente.')->group(function () {
+    
+    // Ruta de Inicio (Bienvenida)
+    Route::get('/inicio', function () {
+        return view('docentes.Inicio_docentes');
+    })->name('inicio_docentes');
 
-Route::middleware(['auth:docente'])->prefix('docente')->name('docente.')->group(function () {    
-    Route::get('/dashboard', [DocenteController::class, 'dashboard'])->name('dashboard');
+    // UNIFICAMOS: Esta será la única ruta para ver las clases
+    // Ahora entrarás a: 127.0.0.1:8000/docente/mis-clases
+    Route::get('/mis-clases', [DocenteController::class, 'dashboard'])->name('clases_docente');
+
+    // Rutas para las otras secciones en verde
+    Route::get('/alumnos', function () {
+        return view('docentes.Alumnos');
+    })->name('alumnos');
+
+    Route::get('/horario', function () {
+        return view('docentes.Visualizar_horario');
+    })->name('visualizar_horario');
+
+    // Rutas de acción
     Route::get('/lista/{id_asignacion}', [DocenteController::class, 'verlista'])->name('lista');
     Route::post('/guardar-calificaciones', [DocenteController::class, 'guardarCalificaciones'])->name('guardar_calificaciones');
     
-    // Logout específico para docente
-Route::post('/logout', [App\Http\Controllers\Auth\LoginEstudianteController::class, 'logout'])->name('logout');});
+    Route::post('/logout', [LoginEstudianteController::class, 'logout'])->name('logout');
+});
 
 /*
 |--------------------------------------------------------------------------

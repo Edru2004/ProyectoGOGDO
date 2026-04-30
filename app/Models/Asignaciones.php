@@ -17,8 +17,8 @@ class Asignaciones extends Model
         'id_docente', 'id_materia', 'id_grupo', 'dia_semana', 'hora_inicio', 'hora_fin', 'aula'
     ];
 
-    // Relación: Una asignación pertenece a una materia
-    public function materia()
+    // Relación: Una asignación pertenece a una materia// Relación corregida en App\Models\Asignaciones.php
+public function materia()
     {
         return $this->belongsTo(Materia::class, 'id_materia', 'id_materia');
     }
@@ -30,8 +30,10 @@ class Asignaciones extends Model
     }
 
     // Relación: Una asignación pertenece a un docente
-    public function docente()
+  public function docente()
     {
         return $this->belongsTo(Docente::class, 'id_docente', 'id_docente');
     }
+
+    
 }

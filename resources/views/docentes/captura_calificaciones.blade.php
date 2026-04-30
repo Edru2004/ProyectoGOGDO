@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,18 +8,71 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/dist/css/all.min.css" rel="stylesheet">
     <style>
-        body { background-color: #f0f2f5; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        .sidebar { background: #28a745; min-height: 100vh; color: white; position: fixed; width: 250px; transition: all 0.3s; }
-        .main-content { margin-left: 250px; padding: 30px; }
-        .table-card { background: white; border-radius: 15px; border: none; box-shadow: 0 4px 12px rgba(0,0,0,0.05); overflow: hidden; }
-        .table thead { background-color: #f8f9fa; }
-        .form-control { text-align: center; border-radius: 8px; border: 1px solid #dee2e6; padding: 8px; }
-        .form-control:focus { border-color: #28a745; box-shadow: 0 0 0 0.25 row rgba(40, 167, 69, 0.25); }
-        .btn-success { background-color: #28a745; border: none; border-radius: 10px; padding: 12px 30px; font-weight: bold; }
-        .btn-success:hover { background-color: #218838; }
-        .badge-grupo { background-color: #e6f4ea; color: #1e7e34; padding: 10px 20px; border-radius: 10px; font-weight: bold; }
+        body {
+            background-color: #f0f2f5;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .sidebar {
+            background: #28a745;
+            min-height: 100vh;
+            color: white;
+            position: fixed;
+            width: 250px;
+            transition: all 0.3s;
+        }
+
+        .main-content {
+            margin-left: 250px;
+            padding: 30px;
+        }
+
+        .table-card {
+            background: white;
+            border-radius: 15px;
+            border: none;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+
+        .table thead {
+            background-color: #f8f9fa;
+        }
+
+        .form-control {
+            text-align: center;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+            padding: 8px;
+        }
+
+        .form-control:focus {
+            border-color: #28a745;
+            box-shadow: 0 0 0 0.25 row rgba(40, 167, 69, 0.25);
+        }
+
+        .btn-success {
+            background-color: #28a745;
+            border: none;
+            border-radius: 10px;
+            padding: 12px 30px;
+            font-weight: bold;
+        }
+
+        .btn-success:hover {
+            background-color: #218838;
+        }
+
+        .badge-grupo {
+            background-color: #e6f4ea;
+            color: #1e7e34;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-weight: bold;
+        }
     </style>
 </head>
+
 <body>
 
     <div class="sidebar p-4 shadow">
@@ -26,7 +80,7 @@
         <hr>
         <ul class="nav flex-column">
             <li class="nav-item mb-3">
-                <a href="{{ route('docente.dashboard') }}" class="btn btn-light w-100 text-start fw-bold">
+                <a href="{{ route('docente.clases_docente') }}" class="btn btn-light w-100 text-start fw-bold">
                     <i class="fas fa-home me-2"></i> Volver al Inicio
                 </a>
             </li>
@@ -45,10 +99,10 @@
         </div>
 
         @if(session('success'))
-            <div class="alert alert-success alert-dismissible fade show border-0 shadow-sm mb-4" role="alert">
-                <i class="fas fa-check-circle me-2"></i> {{ session('success') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
+        <div class="alert alert-success alert-dismissible fade show border-0 shadow-sm mb-4" role="alert">
+            <i class="fas fa-check-circle me-2"></i> {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
         @endif
 
         <div class="card table-card p-4">
@@ -74,8 +128,8 @@
                         <tbody>
                             @foreach($alumnos as $alumno)
                             @php
-                                // Buscamos si ya existe calificación guardada para este alumno en esta materia
-                                $calif = $alumno->calificaciones->where('id_materia', $asignacion->id_materia)->first();
+                            // Buscamos si ya existe calificación guardada para este alumno en esta materia
+                            $calif = $alumno->calificaciones->where('id_materia', $asignacion->id_materia)->first();
                             @endphp
                             <tr class="student-row">
                                 <td class="text-start">
@@ -84,19 +138,19 @@
                                     </div>
                                 </td>
                                 <td>
-                                    <input type="number" step="0.1" name="notas[{{ $alumno->id_estudiante }}][n1]" 
-                                           class="form-control n1" min="0" max="10" 
-                                           value="{{ $calif ? $calif->p1_n1 : '' }}" placeholder="0.0">
+                                    <input type="number" step="0.1" name="notas[{{ $alumno->id_estudiante }}][n1]"
+                                        class="form-control n1" min="0" max="10"
+                                        value="{{ $calif ? $calif->p1_n1 : '' }}" placeholder="0.0">
                                 </td>
                                 <td>
-                                    <input type="number" step="0.1" name="notas[{{ $alumno->id_estudiante }}][n2]" 
-                                           class="form-control n2" min="0" max="10" 
-                                           value="{{ $calif ? $calif->p1_n2 : '' }}" placeholder="0.0">
+                                    <input type="number" step="0.1" name="notas[{{ $alumno->id_estudiante }}][n2]"
+                                        class="form-control n2" min="0" max="10"
+                                        value="{{ $calif ? $calif->p1_n2 : '' }}" placeholder="0.0">
                                 </td>
                                 <td>
-                                    <input type="number" step="0.1" name="notas[{{ $alumno->id_estudiante }}][n3]" 
-                                           class="form-control n3" min="0" max="10" 
-                                           value="{{ $calif ? $calif->p1_n3 : '' }}" placeholder="0.0">
+                                    <input type="number" step="0.1" name="notas[{{ $alumno->id_estudiante }}][n3]"
+                                        class="form-control n3" min="0" max="10"
+                                        value="{{ $calif ? $calif->p1_n3 : '' }}" placeholder="0.0">
                                 </td>
                                 <td class="text-center bg-light">
                                     <span class="suma fw-bold">0</span>
@@ -131,7 +185,7 @@
 
             row.querySelector('.suma').innerText = suma.toFixed(1);
             row.querySelector('.promedio').innerText = promedio;
-            
+
             // Cambiar color si reprueba (opcional)
             if (promedio < 6) {
                 row.querySelector('.promedio').classList.replace('text-success', 'text-danger');
@@ -153,4 +207,5 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>
