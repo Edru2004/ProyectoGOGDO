@@ -8,7 +8,7 @@ use App\Http\Controllers\TutorController;
 use App\Http\Controllers\DocenteLoginController;
 use App\Http\Controllers\Auth\LoginEstudianteController;
 use App\Http\Controllers\AuthController;
-
+use App\Http\Controllers\TwoFactorController;
 /*
 |--------------------------------------------------------------------------
 | 1. RUTAS DE ACCESO (LOGINS PÚBLICOS)
@@ -134,4 +134,8 @@ Route::middleware(['auth:estudiante'])->group(function () {
     Route::get('/estudiante/calificaciones', [EstudianteController::class, 'verCalificaciones'])->name('estudiante.calificaciones');
     
     Route::post('/logout-estudiante', [LoginEstudianteController::class, 'logout'])->name('estudiante.logout');
+
+    // Rutas para la verificación en dos pasos
+Route::get('verify', [TwoFactorController::class, 'index'])->name('verify.index');
+Route::post('verify', [TwoFactorController::class, 'store'])->name('verify.store');
 });

@@ -17,7 +17,8 @@ class Estudiante extends Authenticatable // Cambiamos la extensión aquí
 
     protected $fillable = [
         'nombre', 'apellido_p', 'apellido_m', 'curp', 'email', 'password', 
-        'sexo', 'fecha_nac', 'telefono', 'municipio', 'localidad', 'calle', 'numero', 'id_tutor'
+        'sexo', 'fecha_nac', 'telefono', 'municipio', 'localidad', 'calle', 'numero', 'id_tutor', 'two_factor_code',      // Agrégalo si no está
+    'two_factor_expires_at',
     ];
 
     // IMPORTANTE: Ocultar la contraseña para que no se incluya en respuestas JSON o similares
@@ -38,5 +39,20 @@ class Estudiante extends Authenticatable // Cambiamos la extensión aquí
 {
     // Un estudiante puede tener muchas calificaciones (una por materia)
     return $this->hasMany(\App\Models\Calificaciones::class, 'id_estudiante', 'id_estudiante');
+}
+public function generateTwoFactorCode()
+{
+    $this->timestamps = false; // Para que no intente actualizar 'updated_at' si no quieres
+    $this->two_factor_code = rand(100000, 999999);
+    $this->two_factor_expires_at = now()->addMinutes(10);
+    $this->save();
+}
+
+public function resetTwoFactorCode()
+{
+    $this->timestamps = false;
+    $this->two_factor_code = null;
+    $this->two_factor_expires_at = null;
+    $this->save();
 }
 }

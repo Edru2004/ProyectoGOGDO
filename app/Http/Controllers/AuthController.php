@@ -4,39 +4,43 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Facades\Mail; // Agrega esto
+use App\Mail\Send2FACode;  
+ 
 class AuthController extends Controller
 {
-    // Muestra tu vista personalizada: login_admon.blade.php
     public function showLogin()
     {
         return view('auth.login_admon');
     }
 
-    // Procesa el intento de entrada
     public function login(Request $request)
     {
-        // Validamos que Dulce Rubi escriba algo
         $credentials = $request->validate([
             'email' => ['required', 'email'],
             'password' => ['required'],
         ]);
 
-        // Intentamos entrar con la tabla 'users'
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
             
-            // Si todo sale bien, al Panel de Inicio
-            return redirect()->intended('inicio');
+            $user = Auth::user();
+
+            // 1. Generamos el código de 6 dígitos en la BD
+            $user->generateTwoFactorCode(); 
+
+            // 2. Enviamos el Gmail con el código
+            Mail::to($user->email)->send(new Send2FACode($user->two_factor_code));
+
+            // 3. Redirigimos a la pantalla de verificación
+            return redirect()->route('verify.index');
         }
 
-        // Si se equivoca, lo mandamos de regreso con error
         return back()->withErrors([
             'email' => 'Las credenciales no coinciden con nuestros registros.',
         ])->onlyInput('email');
     }
 
-    // Cerrar sesión
     public function logout(Request $request)
     {
         Auth::logout();

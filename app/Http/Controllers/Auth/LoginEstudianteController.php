@@ -20,7 +20,7 @@ class LoginEstudianteController extends Controller
         return view('auth.login_estudiante');
     }
 
-    public function login(Request $request) {
+  public function login(Request $request) {
     $credentials = $request->validate([
         'email'    => 'required|email',
         'password' => 'required',
@@ -29,15 +29,30 @@ class LoginEstudianteController extends Controller
     // 1. Intentamos como Estudiante
     if (Auth::guard('estudiante')->attempt($credentials)) {
         $request->session()->regenerate();
-        // Redirige al nombre de ruta que definiste: 'estudiante.dashboard'
-        return redirect()->intended(route('estudiante.dashboard'));
+        
+        // Obtenemos al usuario que acaba de entrar
+        /** @var \App\Models\User $user */
+        $user = Auth::guard('estudiante')->user();
+
+        // Generamos y enviamos el código (La lógica de tu modelo User.php)
+        $user->generateTwoFactorCode();
+        \Illuminate\Support\Facades\Mail::to($user->email)->send(new \App\Mail\Send2FACode($user->two_factor_code));
+
+        // Redirigimos a la verificación, NO al dashboard directamente
+        return redirect()->route('verify.index');
     }
 
     // 2. Intentamos como Docente
     if (Auth::guard('docente')->attempt($credentials)) {
         $request->session()->regenerate();
-        // Redirige al nombre de ruta que definiste: 'docente.dashboard'
-        return redirect()->intended(route('docente.dashboard'));
+
+        /** @var \App\Models\User $user */
+        $user = Auth::guard('docente')->user();
+
+        $user->generateTwoFactorCode();
+        \Illuminate\Support\Facades\Mail::to($user->email)->send(new \App\Mail\Send2FACode($user->two_factor_code));
+
+        return redirect()->route('verify.index');
     }
 
     return back()->withErrors([
