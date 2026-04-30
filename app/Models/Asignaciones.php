@@ -19,10 +19,10 @@ class Asignaciones extends Model
 
     // Relación: Una asignación pertenece a una materia// Relación corregida en App\Models\Asignaciones.php
 public function materia()
-    {
-        return $this->belongsTo(Materia::class, 'id_materia', 'id_materia');
-    }
-
+{
+    // Verifica que el nombre de la tabla y la llave foránea sean correctos
+    return $this->belongsTo(Materia::class, 'id_materia', 'id_materia');
+}
     // Relación: Una asignación pertenece a un grupo
     public function grupo()
     {
@@ -30,10 +30,10 @@ public function materia()
     }
 
     // Relación: Una asignación pertenece a un docente
-  public function docente()
-    {
-        return $this->belongsTo(Docente::class, 'id_docente', 'id_docente');
-    }
+public function docente()
+{
+    return $this->belongsTo(Docente::class, 'id_docente', 'id_docente');
+}
 
     
 }
