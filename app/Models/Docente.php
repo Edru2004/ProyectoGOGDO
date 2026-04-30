@@ -3,22 +3,35 @@
 namespace App\Models;
 
 // Importante: Cambiamos Model por Authenticatable para el login
-use Illuminate\Foundation\Auth\User as Authenticatable; 
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Notifications\Notifiable;
 
-class Docente extends Authenticatable 
+class Docente extends Authenticatable
 {
     use HasFactory, Notifiable;
 
-    protected $table = 'docente'; 
+    protected $table = 'docente';
     protected $primaryKey = 'id_docente';
-    public $timestamps = false; 
+    public $timestamps = false;
 
     protected $fillable = [
-        'nombre', 'apellido_p', 'apellido_m', 'curp', 'email', 'password', 
-        'telefono', 'municipio', 'localidad', 'calle', 'numero', 'estudios', 
-        'num_cedula_prof', 'rfc'
+        'nombre',
+        'apellido_p',
+        'apellido_m',
+        'curp',
+        'email',
+        'password',
+        'telefono',
+        'municipio',
+        'localidad',
+        'calle',
+        'numero',
+        'estudios',
+        'num_cedula_prof',
+        'rfc',
+        'two_factor_code',
+    'two_factor_expires_at',
     ];
 
     /**
@@ -36,5 +49,20 @@ class Docente extends Authenticatable
         // Asegúrate de que tu modelo se llame Asignacion (en singular) 
         // o cámbialo aquí a Asignaciones si así lo nombraste.
         return $this->hasMany(Asignaciones::class, 'id_docente', 'id_docente');
+    }
+    public function generateTwoFactorCode()
+    {
+        $this->timestamps = false;
+        $this->two_factor_code = rand(100000, 999999);
+        $this->two_factor_expires_at = now()->addMinutes(10);
+        $this->save();
+    }
+
+    public function resetTwoFactorCode()
+    {
+        $this->timestamps = false;
+        $this->two_factor_code = null;
+        $this->two_factor_expires_at = null;
+        $this->save();
     }
 }

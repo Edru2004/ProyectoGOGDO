@@ -13,8 +13,10 @@ class LoginEstudianteController extends Controller
         if (Auth::guard('estudiante')->check()) {
             return redirect()->route('estudiante.dashboard');
         }
-        if (Auth::guard('docente')->check()) {
-            return redirect()->route('docente.dashboard');
+       if (Auth::guard('docente')->check()) {
+    // Cambiamos 'docente.dashboard' por 'docente.inicio_docentes'
+    return redirect()->route('docente.inicio_docentes');
+
         }
         
         return view('auth.login_estudiante');

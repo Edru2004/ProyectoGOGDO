@@ -15,27 +15,42 @@ class TwoFactorController extends Controller
     }
 
     // Recibe el código de la pantalla y lo revisa
+   // Recibe el código de la pantalla y lo revisa
     public function store(Request $request)
-{
-    $request->validate([
-        'two_factor_code' => 'required',
-    ]);
+    {
+        $request->validate([
+            'two_factor_code' => 'required',
+        ]);
 
-    /** @var \App\Models\User $user */
-$user = Auth::user();
+        /** @var \App\Models\User|\App\Models\Docente|\App\Models\Estudiante $user */
+        $user = Auth::user();
 
-    // Usamos === para mayor seguridad
-    if ($request->two_factor_code === $user->two_factor_code) {
-        
-        // Limpiamos el código usando el método que ya tienes en User.php
-        $user->resetTwoFactorCode();
+        // Comparamos el código (puedes usar == por si uno es string y el otro int)
+        if ($request->two_factor_code == $user->two_factor_code) {
+            
+            // Limpiamos el código
+            $user->resetTwoFactorCode();
 
-        // Solo si entró aquí, lo mandamos al dashboard
-        return redirect()->route('estudiante.dashboard');
+            // --- REDIRECCIÓN INTELIGENTE ---
+
+            // 1. Si es el Administrador (Guard por defecto 'web')
+            if (Auth::guard('web')->check()) {
+                return redirect()->route('inicio');
+            }
+
+            // 2. Si es Docente
+            if (Auth::guard('docente')->check()) {
+                return redirect()->route('docente.inicio_docentes');
+            }
+
+            // 3. Si es Estudiante
+            if (Auth::guard('estudiante')->check()) {
+                return redirect()->route('estudiante.inicio_estudiantes');
+            }
+        }
+
+        // Si el código no fue igual
+        return redirect()->back()->with('error', 'Código incorrecto. Revisa tu correo.');
     }
-
-    // Si el código no fue igual, saltará hasta aquí
-    return redirect()->back()->with('error', 'Código incorrecto. Revisa tu Gmail.');
-}
 }
 
