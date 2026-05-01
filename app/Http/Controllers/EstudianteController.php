@@ -153,7 +153,7 @@ class EstudianteController extends Controller
     public function descargarPDF($id)
     {
         // Seguimos usando el 'with' para traer los datos del tutor
-        $estudiante = Estudiante::with(['tutor', 'inscripcion.semestre'])->findOrFail($id);
+        $estudiante = Estudiante::with(['tutor', 'inscripcion.semestre', 'calificaciones.materia'])->find($id);
         $pdf = Pdf::loadView('estudiantes.pdf', compact('estudiante'));
         return $pdf->download('Reporte_' . $estudiante->curp . '.pdf');
     }
@@ -190,9 +190,9 @@ class EstudianteController extends Controller
 
         // 2. Traemos sus calificaciones con la información de la materia
         // Cambiamos 'materia' por 'asignacion.materia' y 'asignacion.docente'
-      $calificaciones = \App\Models\Calificaciones::with(['asignacion.materia', 'asignacion.docente'])
-    ->where('id_estudiante', $estudianteId)
-    ->get();
+        $calificaciones = \App\Models\Calificaciones::with(['asignacion.materia', 'asignacion.docente'])
+            ->where('id_estudiante', $estudianteId)
+            ->get();
         // 3. Retornamos la vista (asegúrate de que la ruta del archivo sea correcta)
         return view('estudiantes.calificaciones', compact('calificaciones'));
     }

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,7 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
-    
+
     <!-- Tus estilos personalizados -->
     <link rel="stylesheet" href="{{ asset('css/estilos.css') }}">
 
@@ -29,8 +30,8 @@
             color: #ffffff !important;
         }
 
-        body.dark-mode .table, 
-        body.dark-mode .table td, 
+        body.dark-mode .table,
+        body.dark-mode .table td,
         body.dark-mode .table th {
             background-color: #1e1e1e !important;
             color: #ffffff !important;
@@ -41,26 +42,32 @@
         #btn-theme {
             transition: transform 0.3s ease;
         }
-        #btn-theme:hover { transform: scale(1.1); }
+
+        #btn-theme:hover {
+            transform: scale(1.1);
+        }
+
         /* --- AGREGAR ESTO DENTRO DE body.dark-mode --- */
 
-/* Forzar que el texto de ayuda/muted sea legible */
-body.dark-mode .text-muted {
-    color: #b0b0b0 !important; /* Un gris mucho más claro */
-}
+        /* Forzar que el texto de ayuda/muted sea legible */
+        body.dark-mode .text-muted {
+            color: #b0b0b0 !important;
+            /* Un gris mucho más claro */
+        }
 
-/* Ajuste para los nombres de usuario o textos secundarios en el sidebar */
-body.dark-mode .info small, 
-body.dark-mode .user-panel small {
-    color: rgba(255, 255, 255, 0.7) !important;
-}
+        /* Ajuste para los nombres de usuario o textos secundarios en el sidebar */
+        body.dark-mode .info small,
+        body.dark-mode .user-panel small {
+            color: rgba(255, 255, 255, 0.7) !important;
+        }
 
-/* Si usas la clase .lead de Bootstrap */
-body.dark-mode .lead {
-    color: #e0e0e0 !important;
-}
+        /* Si usas la clase .lead de Bootstrap */
+        body.dark-mode .lead {
+            color: #e0e0e0 !important;
+        }
     </style>
 </head>
+
 <body>
     <script>
         (function() {
@@ -100,38 +107,39 @@ body.dark-mode .lead {
             </div>
 
             <!-- Lista de Navegación -->
-            
-                 <!-- Lista de Navegación corregida -->
-<!-- Lista de Navegación corregida -->
-<ul class="list-unstyled">
-    <li>
-        <a href="{{ route('estudiante.inicio_estudiantes') }}" class="{{ Request::is('estudiante/inicio*') ? 'active' : '' }}">
-            <span class="icon"><i class="bi bi-house-door-fill"></i></span> 
-            <span class="text">Inicio</span>
-        </a>
-    </li>
-    <li>
-        <a href="{{ route('estudiante.credencial') }}" class="{{ Request::is('estudiante/credencial*') ? 'active' : '' }}">
-            <span class="icon"><i class="bi bi-person-badge-fill"></i></span> 
-            <span class="text">Mi Credencial</span>
-        </a>
-    </li>
-    <li>
-        <a href="{{ route('estudiante.calificaciones') }}" class="{{ Request::is('estudiante/calificaciones*') ? 'active' : '' }}">
-            <span class="icon"><i class="bi bi-star-fill"></i></span> 
-            <span class="text">Mis Calificaciones</span>
-        </a>
-    </li>
+
+            <!-- Lista de Navegación corregida -->
+            <!-- Lista de Navegación corregida -->
+            <ul class="list-unstyled">
+                <li>
+                    <a href="{{ route('estudiante.inicio_estudiantes') }}" class="{{ Request::is('estudiante/inicio*') ? 'active' : '' }}">
+                        <span class="icon"><i class="bi bi-house-door-fill"></i></span>
+                        <span class="text">Inicio</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('estudiante.credencial') }}" class="{{ Request::is('estudiante/credencial*') ? 'active' : '' }}">
+                        <span class="icon"><i class="bi bi-person-badge-fill"></i></span>
+                        <span class="text">Mi Credencial</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('estudiante.calificaciones') }}" class="{{ Request::is('estudiante/calificaciones*') ? 'active' : '' }}">
+                        <span class="icon"><i class="bi bi-star-fill"></i></span>
+                        <span class="text">Mis Calificaciones</span>
+                    </a>
+                </li>
             </ul>
 
             <!-- Botón de Cerrar Sesión -->
             <div class="mt-auto">
-                <form id="logout-form" action="{{ route('estudiante.logout') }}" method="POST" style="display: none;">
+                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                     @csrf
                 </form>
-                <a href="#" class="text-decoration-none d-flex align-items-center p-2 opacity-75" 
-                   style="color: var(--sidebar-text)"
-                   onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                </form>
+                <a href="#" class="text-decoration-none d-flex align-items-center p-2 opacity-75"
+                    style="color: var(--sidebar-text)"
+                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                     <span class="icon"><i class="bi bi-box-arrow-right"></i></span>
                     <span class="text ms-3">Cerrar Sesión</span>
                 </a>
@@ -140,16 +148,16 @@ body.dark-mode .lead {
 
         <!-- CONTENIDO (Usa tu clase .contenido) -->
         <main class="contenido" id="contenido">
-            
-            {{-- Sección de Bienvenida (Opcional, solo en dashboard) --}}
-        
 
-        
-         
+            {{-- Sección de Bienvenida (Opcional, solo en dashboard) --}}
+
+
+
+
 
             <!-- CONTENIDO DINÁMICO -->
-            @yield('content') 
-            
+            @yield('content')
+
         </main>
     </div>
 
@@ -190,4 +198,5 @@ body.dark-mode .lead {
         });
     </script>
 </body>
+
 </html>

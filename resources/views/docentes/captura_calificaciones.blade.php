@@ -108,9 +108,7 @@
         <div class="card table-card p-4">
             <form action="{{ route('docente.guardar_calificaciones') }}" method="POST" id="formCalificaciones">
                 @csrf
-                <input type="hidden" name="id_materia" value="{{ $asignacion->id_materia }}">
-
-                <div class="table-responsive">
+<input type="hidden" name="id_asignacion" value="{{ $asignacion->id_asignacion }}">                <div class="table-responsive">
                     <table class="table table-hover align-middle">
                         <thead class="table-light text-center">
                             <tr>
@@ -126,41 +124,45 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($alumnos as $alumno)
-                            @php
-                            // Buscamos si ya existe calificación guardada para este alumno en esta materia
-                            $calif = $alumno->calificaciones->where('id_materia', $asignacion->id_materia)->first();
-                            @endphp
-                            <tr class="student-row">
-                                <td class="text-start">
-                                    <div class="fw-bold text-uppercase" style="font-size: 0.9rem;">
-                                        {{ $alumno->apellido_p }} {{ $alumno->apellido_m }} {{ $alumno->nombre }}
-                                    </div>
-                                </td>
-                                <td>
-                                    <input type="number" step="0.1" name="notas[{{ $alumno->id_estudiante }}][n1]"
-                                        class="form-control n1" min="0" max="10"
-                                        value="{{ $calif ? $calif->p1_n1 : '' }}" placeholder="0.0">
-                                </td>
-                                <td>
-                                    <input type="number" step="0.1" name="notas[{{ $alumno->id_estudiante }}][n2]"
-                                        class="form-control n2" min="0" max="10"
-                                        value="{{ $calif ? $calif->p1_n2 : '' }}" placeholder="0.0">
-                                </td>
-                                <td>
-                                    <input type="number" step="0.1" name="notas[{{ $alumno->id_estudiante }}][n3]"
-                                        class="form-control n3" min="0" max="10"
-                                        value="{{ $calif ? $calif->p1_n3 : '' }}" placeholder="0.0">
-                                </td>
-                                <td class="text-center bg-light">
-                                    <span class="suma fw-bold">0</span>
-                                </td>
-                                <td class="text-center bg-light">
-                                    <span class="promedio fw-bold text-success">0.0</span>
-                                </td>
-                            </tr>
-                            @endforeach
-                        </tbody>
+    @foreach($alumnos as $alumno)
+    @php
+        // Buscamos la calificación exacta usando los tres identificadores
+        $calif = $alumno->calificaciones
+                        ->where('id_asignacion', $asignacion->id_asignacion)
+                        ->where('id_materia', $asignacion->id_materia)
+                        ->first();
+    @endphp {{-- IMPORTANTE: Esta etiqueta debe estar aquí para cerrar el bloque PHP --}}
+    
+    <tr class="student-row">
+        <td class="text-start">
+            <div class="fw-bold text-uppercase" style="font-size: 0.9rem;">
+                {{ $alumno->apellido_p }} {{ $alumno->apellido_m }} {{ $alumno->nombre }}
+            </div>
+        </td>
+        <td>
+            <input type="number" step="0.1" name="notas[{{ $alumno->id_estudiante }}][n1]"
+                class="form-control n1" min="0" max="10"
+                value="{{ $calif ? $calif->p1_n1 : '' }}" placeholder="0.0">
+        </td>
+        <td>
+            <input type="number" step="0.1" name="notas[{{ $alumno->id_estudiante }}][n2]"
+                class="form-control n2" min="0" max="10"
+                value="{{ $calif ? $calif->p1_n2 : '' }}" placeholder="0.0">
+        </td>
+        <td>
+            <input type="number" step="0.1" name="notas[{{ $alumno->id_estudiante }}][n3]"
+                class="form-control n3" min="0" max="10"
+                value="{{ $calif ? $calif->p1_n3 : '' }}" placeholder="0.0">
+        </td>
+        <td class="text-center bg-light">
+            <span class="suma fw-bold">0</span>
+        </td>
+        <td class="text-center bg-light">
+            <span class="promedio fw-bold text-success">0.0</span>
+        </td>
+    </tr>
+    @endforeach
+</tbody>
                     </table>
                 </div>
 

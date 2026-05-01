@@ -50,19 +50,19 @@ class Docente extends Authenticatable
         // o cámbialo aquí a Asignaciones si así lo nombraste.
         return $this->hasMany(Asignaciones::class, 'id_docente', 'id_docente');
     }
-    public function generateTwoFactorCode()
-    {
-        $this->timestamps = false;
-        $this->two_factor_code = rand(100000, 999999);
-        $this->two_factor_expires_at = now()->addMinutes(10);
-        $this->save();
-    }
+   // En app/Models/Docente.php y app/Models/Estudiante.php
 
-    public function resetTwoFactorCode()
-    {
-        $this->timestamps = false;
-        $this->two_factor_code = null;
-        $this->two_factor_expires_at = null;
-        $this->save();
-    }
+public function generateTwoFactorCode()
+{
+    $this->timestamps = false; // Para que no se mueva la fecha de 'updated_at'
+    $this->two_factor_code = rand(100000, 999999);
+    $this->save();
+}
+
+public function resetTwoFactorCode()
+{
+    $this->timestamps = false;
+    $this->two_factor_code = null;
+    $this->save();
+}
 }

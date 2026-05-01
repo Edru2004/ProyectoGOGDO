@@ -126,7 +126,7 @@
 
             <!-- Cerrar Sesión -->
             <div class="mt-auto">
-                <form id="logout-form" action="{{ route('docente.logout') }}" method="POST" style="display: none;">
+                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                     @csrf
                 </form>
                 <a href="#" class="text-decoration-none d-flex align-items-center p-2 opacity-75"

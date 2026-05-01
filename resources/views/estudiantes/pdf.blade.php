@@ -16,6 +16,10 @@
         
         .seccion-titulo { background-color: #578a24; color: white; padding: 5px 10px; margin-top: 20px; font-size: 14px; font-weight: bold; }
         .footer { position: fixed; bottom: -30px; left: 0px; right: 0px; height: 50px; text-align: center; font-size: 10px; color: #777; }
+        
+        /* Estilos específicos para la tabla de calificaciones */
+        .text-center { text-align: center; }
+        .fw-bold { font-weight: bold; }
     </style>
 </head>
 <body>
@@ -46,35 +50,64 @@
         <tr><th>ESTADO</th><td>{{ $estudiante->inscripcion->estado_inscripcion ?? 'Activo' }}</td></tr>
     </table>
 
-<div class="seccion-titulo">INFORMACIÓN DEL TUTOR / RESPONSABLE</div>
-<table class="tabla-datos">
-    <tr>
-        <th>NOMBRE DEL TUTOR</th>
-        <td>{{ $estudiante->tutor->nombre ?? 'Dato no registrado' }} {{ $estudiante->tutor->apellido_p ?? '' }}</td>
-    </tr>
-    <tr>
-        <th>PARENTESCO</th>
-        <td>{{ $estudiante->tutor->parentesco ?? 'N/A' }}</td>
-    </tr>
-    <tr>
-        <th>TELÉFONO DE CONTACTO</th>
-        <td>{{ $estudiante->tutor->no_telefono ?? 'Sin número' }}</td>
-  <tr>
-    <th>DIRECCIÓN</th>
-    <td>
-        @if($estudiante->tutor)
-            {{ $estudiante->tutor->calle ?? '' }} #{{ $estudiante->tutor->numero ?? '' }}, 
-            {{ $estudiante->tutor->localidad ?? '' }}, 
-            {{ $estudiante->tutor->municipio ?? '' }}
-        @else
-            Dirección no registrada
-        @endif
-    </td>
-</tr>
-</table>
+    <div class="seccion-titulo">INFORMACIÓN DEL TUTOR / RESPONSABLE</div>
+    <table class="tabla-datos">
+        <tr>
+            <th>NOMBRE DEL TUTOR</th>
+            <td>{{ $estudiante->tutor->nombre ?? 'Dato no registrado' }} {{ $estudiante->tutor->apellido_p ?? '' }}</td>
+        </tr>
+        <tr>
+            <th>PARENTESCO</th>
+            <td>{{ $estudiante->tutor->parentesco ?? 'N/A' }}</td>
+        </tr>
+        <tr>
+            <th>TELÉFONO DE CONTACTO</th>
+            <td>{{ $estudiante->tutor->no_telefono ?? 'Sin número' }}</td>
+        </tr>
+        <tr>
+            <th>DIRECCIÓN</th>
+            <td>
+                @if($estudiante->tutor)
+                    {{ $estudiante->tutor->calle ?? '' }} #{{ $estudiante->tutor->numero ?? '' }}, 
+                    {{ $estudiante->tutor->localidad ?? '' }}, 
+                    {{ $estudiante->tutor->municipio ?? '' }}
+                @else
+                    Dirección no registrada
+                @endif
+            </td>
+        </tr>
+    </table>
+
+    <div class="seccion-titulo">CALIFICACIONES ACTUALES</div>
+    <table class="tabla-datos">
+        <thead>
+            <tr style="background-color: #f2f2f2;">
+                <th class="text-center">MATERIA</th>
+                <th class="text-center">PARCIAL 1</th>
+                <th class="text-center">PARCIAL 2</th>
+                <th class="text-center">PROMEDIO FINAL</th>
+            </tr>
+        </thead>
+        <tbody>
+            @forelse($estudiante->calificaciones as $calificacion)
+                <tr>
+                    <td style="width: 40%;">{{ $calificacion->materia->nombre_materia ?? 'Materia' }}</td>
+                    <td class="text-center">{{ $calificacion->parcial_1 ?? '0' }}</td>
+                    <td class="text-center">{{ $calificacion->parcial_2 ?? '0' }}</td>
+                    <td class="text-center fw-bold" style="background-color: #f9f9f9;">
+                        {{ number_format(($calificacion->parcial_1 + $calificacion->parcial_2) / 2, 1) }}
+                    </td>
+                </tr>
+            @empty
+                <tr>
+                    <td colspan="4" class="text-center">No hay calificaciones registradas en este periodo.</td>
+                </tr>
+            @endforelse
+        </tbody>
+    </table>
 
     <div class="footer">
-        C.P. 72470, Puebla, Pue. | Generado el {{ date('d/m/Y H:i') }}
+        C.P. 72470, Puebla, Pue. | Generado el {{ date('d/m/Y H:i') }} | GDO Sistema de Control
     </div>
 </body>
 </html>

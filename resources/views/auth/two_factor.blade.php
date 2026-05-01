@@ -30,7 +30,8 @@
         </form>
 
         <div class="mt-6 text-center">
-            <a href="{{ route('estudiante.login') }}" class="text-gray-500 text-sm hover:underline">Cancelar e ir al inicio</a>
+            <!-- CAMBIO AQUÍ: Usamos el nombre correcto de tu ruta escolar -->
+            <a href="{{ route('login.escolar') }}" class="text-gray-500 text-sm hover:underline">Cancelar e ir al inicio</a>
         </div>
     </div>
 </body>

@@ -16,41 +16,37 @@ class TwoFactorController extends Controller
 
     // Recibe el código de la pantalla y lo revisa
    // Recibe el código de la pantalla y lo revisa
-    public function store(Request $request)
-    {
-        $request->validate([
-            'two_factor_code' => 'required',
-        ]);
+  public function store(Request $request) {
+    $request->validate(['two_factor_code' => 'required']);
 
-        /** @var \App\Models\User|\App\Models\Docente|\App\Models\Estudiante $user */
-        $user = Auth::user();
+    // Buscamos quién está intentando entrar
+    $user = Auth::guard('web')->user() 
+            ?? Auth::guard('docente')->user() 
+            ?? Auth::guard('estudiante')->user();
 
-        // Comparamos el código (puedes usar == por si uno es string y el otro int)
-        if ($request->two_factor_code == $user->two_factor_code) {
-            
-            // Limpiamos el código
-            $user->resetTwoFactorCode();
+    if (!$user) {
+        return redirect()->route('login.escolar')->withErrors(['error' => 'Sesión expirada']);
+    }
 
-            // --- REDIRECCIÓN INTELIGENTE ---
+    if ($request->two_factor_code == $user->two_factor_code) {
+        // AHORA SÍ: Esta función ya existe en todos los modelos
+        $user->resetTwoFactorCode();
 
-            // 1. Si es el Administrador (Guard por defecto 'web')
-            if (Auth::guard('web')->check()) {
-                return redirect()->route('inicio');
-            }
-
-            // 2. Si es Docente
-            if (Auth::guard('docente')->check()) {
-                return redirect()->route('docente.inicio_docentes');
-            }
-
-            // 3. Si es Estudiante
-            if (Auth::guard('estudiante')->check()) {
-                return redirect()->route('estudiante.inicio_estudiantes');
-            }
+        // Redirecciones por nombre de ruta oficial (vistos en tu terminal)
+        if (Auth::guard('web')->check()) {
+            return redirect()->route('inicio');
+        }
+        
+        if (Auth::guard('docente')->check()) {
+            return redirect()->route('docente.inicio_docentes');
         }
 
-        // Si el código no fue igual
-        return redirect()->back()->with('error', 'Código incorrecto. Revisa tu correo.');
+        if (Auth::guard('estudiante')->check()) {
+            return redirect()->route('estudiante.inicio_estudiantes');
+        }
     }
+
+    return back()->withErrors(['two_factor_code' => 'El código es incorrecto']);
+}
 }
 

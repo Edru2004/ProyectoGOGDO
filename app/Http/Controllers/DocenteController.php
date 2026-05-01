@@ -140,24 +140,31 @@ public function verlista($id_asignacion) {
     return view('docentes.captura_calificaciones', compact('alumnos', 'asignacion'));
 }
 
-public function guardarCalificaciones(Request $request) {
-    $notas = $request->input('notas');
-    $id_materia = $request->input('id_materia');
+public function guardarCalificaciones(Request $request) 
+{
+    $datos = $request->input('notas'); 
+    $id_asignacion = $request->input('id_asignacion');
 
-    foreach ($notas as $id_estudiante => $valores) {
+    if (!$datos) return back()->with('error', 'No hay datos');
+
+    // Buscamos la asignación para obtener el id_materia real
+    $asignacion = \App\Models\Asignaciones::findOrFail($id_asignacion);
+
+    foreach ($datos as $id_estudiante => $valores) {
         \App\Models\Calificaciones::updateOrCreate(
             [
                 'id_estudiante' => $id_estudiante, 
-                'id_materia' => $id_materia
+                'id_asignacion' => $id_asignacion,
+                'id_materia'    => $asignacion->id_materia // <-- Lo tomamos de la asignación
             ],
             [
-                'p1_n1' => $valores['n1'] ?? 0, 
-                'p1_n2' => $valores['n2'] ?? 0, 
-                'p1_n3' => $valores['n3'] ?? 0,
+                'p1_n1' => floatval($valores['n1'] ?? 0),
+                'p1_n2' => floatval($valores['n2'] ?? 0),
+                'p1_n3' => floatval($valores['n3'] ?? 0),
             ]
         );
     }
-    return redirect()->back()->with('success', '¡Lista del GDO actualizada!');
+    return back()->with('success', '¡Lista del GDO actualizada correctamente!');
 }
  // No olvides importar esto arriba
 
