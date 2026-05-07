@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,66 +10,69 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <link rel="stylesheet" href="{{ asset('css/estilos.css') }}">
 
-  <style>
-    /* --- ESTILOS GLOBALES DE MODO OSCURO --- */
-    
-    /* 1. Fondos y Colores Base */
-    body.dark-mode {
-        background-color: #121212 !important;
-        color: #e0e0e0 !important;
-    }
+    <style>
+        /* --- ESTILOS GLOBALES DE MODO OSCURO --- */
 
-    body.dark-mode .contenido {
-        background-color: #121212 !important;
-    }
+        /* 1. Fondos y Colores Base */
+        body.dark-mode {
+            background-color: #121212 !important;
+            color: #e0e0e0 !important;
+        }
 
-    /* 2. Tablas y Contenido de Datos */
-    body.dark-mode .table, 
-    body.dark-mode .table td, 
-    body.dark-mode .table th,
-    body.dark-mode .table tr,
-    body.dark-mode .table td * {
-        background-color: #1e1e1e !important;
-        color: #ffffff !important; /* Blanco puro para nombres y datos */
-        border-color: #333 !important;
-    }
+        body.dark-mode .contenido {
+            background-color: #121212 !important;
+        }
 
-    /* 3. Tarjetas (Cards) */
-    body.dark-mode .card:not(.bg-primary, .bg-success, .bg-warning) {
-        background-color: #1e1e1e !important;
-        border: 1px solid #333 !important;
-        color: #ffffff !important;
-    }
+        /* 2. Tablas y Contenido de Datos */
+        body.dark-mode .table,
+        body.dark-mode .table td,
+        body.dark-mode .table th,
+        body.dark-mode .table tr,
+        body.dark-mode .table td * {
+            background-color: #1e1e1e !important;
+            color: #ffffff !important;
+            /* Blanco puro para nombres y datos */
+            border-color: #333 !important;
+        }
 
-    /* 4. Formularios e Inputs */
-    body.dark-mode .form-control, 
-    body.dark-mode .form-select {
-        background-color: #2d2d2d !important;
-        border-color: #444 !important;
-        color: #ffffff !important;
-    }
+        /* 3. Tarjetas (Cards) */
+        body.dark-mode .card:not(.bg-primary, .bg-success, .bg-warning) {
+            background-color: #1e1e1e !important;
+            border: 1px solid #333 !important;
+            color: #ffffff !important;
+        }
 
-    body.dark-mode .form-control::placeholder {
-        color: #888 !important;
-    }
+        /* 4. Formularios e Inputs */
+        body.dark-mode .form-control,
+        body.dark-mode .form-select {
+            background-color: #2d2d2d !important;
+            border-color: #444 !important;
+            color: #ffffff !important;
+        }
 
-    /* 5. Textos Secundarios y Pequeños */
-    body.dark-mode .text-muted, 
-    body.dark-mode small,
-    body.dark-mode .info small {
-        color: #bbbbbb !important; /* Gris claro para correos y descripciones */
-    }
+        body.dark-mode .form-control::placeholder {
+            color: #888 !important;
+        }
 
-    /* 6. Botón de Cambio de Tema (Efectos) */
-    #btn-theme {
-        transition: transform 0.3s ease;
-    }
-    
-    #btn-theme:hover {
-        transform: scale(1.1);
-    }
-</style>
+        /* 5. Textos Secundarios y Pequeños */
+        body.dark-mode .text-muted,
+        body.dark-mode small,
+        body.dark-mode .info small {
+            color: #bbbbbb !important;
+            /* Gris claro para correos y descripciones */
+        }
+
+        /* 6. Botón de Cambio de Tema (Efectos) */
+        #btn-theme {
+            transition: transform 0.3s ease;
+        }
+
+        #btn-theme:hover {
+            transform: scale(1.1);
+        }
+    </style>
 </head>
+
 <body>
     <script>
         (function() {
@@ -96,10 +100,21 @@
 
             <div class="user-panel">
                 <div class="image-wrapper">
-                    <img src="https://ui-avatars.com/api/?name=Dulce+Rubi&background=fff&color=6c993e" class="user-img" alt="User">
+                    {{-- Verificamos si el administrador tiene una foto personalizada --}}
+                    @if(Auth::user()->foto && Auth::user()->foto != 'default-avatar.png')
+                    <img src="{{ asset('img/perfiles/' . Auth::user()->foto) }}"
+                        class="user-img"
+                        alt="User"
+                        style="object-fit: cover;">
+                    @else
+                    {{-- Si no tiene, usamos el servicio de iniciales dinámico con su nombre real --}}
+                    <img src="https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->name) }}&background=fff&color=6c993e"
+                        class="user-img"
+                        alt="User">
+                    @endif
                 </div>
                 <div class="info">
-                    <span class="user-name">Dulce Rubi</span>
+                    <span class="user-name">{{ Auth::user()->name }}</span>
                     <small style="color: rgba(255,255,255,0.7)">Administrador</small>
                 </div>
             </div>
@@ -107,48 +122,55 @@
             <ul>
                 <li>
                     <a href="{{ route('inicio') }}" class="{{ Request::is('inicio*') ? 'active' : '' }}">
-                        <span class="icon"><i class="bi bi-grid-1x2-fill"></i></span> 
+                        <span class="icon"><i class="bi bi-grid-1x2-fill"></i></span>
                         <span class="text">Inicio</span>
                     </a>
                 </li>
                 <li>
                     <a href="{{ route('estudiantes.index') }}" class="{{ Request::is('estudiantes*') ? 'active' : '' }}">
-                        <span class="icon"><i class="bi bi-person-video3"></i></span> 
+                        <span class="icon"><i class="bi bi-person-video3"></i></span>
                         <span class="text">Gestión Estudiantil</span>
                     </a>
                 </li>
                 <li>
                     <a href="{{ route('docentes.index') }}" class="{{ Request::is('docentes*') ? 'active' : '' }}">
-                        <span class="icon"><i class="bi bi-briefcase-fill"></i></span> 
+                        <span class="icon"><i class="bi bi-briefcase-fill"></i></span>
                         <span class="text">Personal Docente</span>
                     </a>
                 </li>
                 <li>
                     <a href="{{ route('tutores.index') }}" class="{{ Request::is('tutores*') ? 'active' : '' }}">
-                        <span class="icon"><i class="bi bi-people-fill"></i></span> 
+                        <span class="icon"><i class="bi bi-people-fill"></i></span>
                         <span class="text">Padres de Familia</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('configuracion.index') }}" class="{{ Request::is('configuracion*') ? 'active' : '' }}">
+                        {{-- Cambiamos bi-people-fill por bi-gear-fill --}}
+                        <span class="icon"><i class="bi bi-gear-fill"></i></span>
+                        <span class="text">Configuración</span>
                     </a>
                 </li>
             </ul>
 
-           <div class="mt-auto">
-    <!-- Formulario oculto para el logout -->
-    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-        @csrf
-    </form>
+            <div class="mt-auto">
+                <!-- Formulario oculto para el logout -->
+                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                    @csrf
+                </form>
 
-    <!-- Enlace que activa el formulario -->
-    <a href="#" 
-       class="text-white text-decoration-none d-flex align-items-center p-2 opacity-75" 
-       onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-        <i class="bi bi-box-arrow-right fs-4"></i>
-        <span class="text ms-3">Cerrar Sesión</span>
-    </a>
-</div>
+                <!-- Enlace que activa el formulario -->
+                <a href="#"
+                    class="text-white text-decoration-none d-flex align-items-center p-2 opacity-75"
+                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                    <i class="bi bi-box-arrow-right fs-4"></i>
+                    <span class="text ms-3">Cerrar Sesión</span>
+                </a>
+            </div>
         </nav>
 
         <main class="contenido" id="contenido">
-            @yield('contenido_dinamico') 
+            @yield('contenido_dinamico')
         </main>
     </div>
 
@@ -191,4 +213,5 @@
         });
     </script>
 </body>
+
 </html>

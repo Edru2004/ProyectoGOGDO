@@ -14,12 +14,13 @@
         }
 
         .sidebar {
-            background: #28a745;
+            background: #5d9b44; /* Verde Institucional */
             min-height: 100vh;
             color: white;
             position: fixed;
             width: 250px;
             transition: all 0.3s;
+            z-index: 1000;
         }
 
         .main-content {
@@ -32,27 +33,73 @@
             border-radius: 15px;
             border: none;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-            overflow: hidden;
+            padding: 40px !important;
         }
 
-        .table thead {
-            background-color: #f8f9fa;
+        /* DISEÑO DE ENCABEZADO INSTITUCIONAL */
+        .header-logo {
+            width: 80px;
+            height: auto;
+        }
+        .header-title {
+            color: #5d9b44;
+            font-weight: bold;
+            letter-spacing: 1px;
+            margin-bottom: 2px;
+        }
+        .header-subtitle {
+            color: #333;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 2px;
+        }
+        .header-report-type {
+            color: #666;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+        }
+        .header-divider {
+            border-top: 2px solid #5d9b44;
+            margin: 15px 0 25px 0;
+            opacity: 1;
+        }
+
+        /* DISEÑO DE TABLA INSTITUCIONAL */
+        .table-bordered th, .table-bordered td {
+            border: 1px solid #dee2e6 !important;
+        }
+
+        .table thead th {
+            background-color: #5d9b44 !important; /* Verde GDO */
+            color: white !important;
+            vertical-align: middle;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            border: 1px solid #4a7c36 !important;
+            text-align: center;
         }
 
         .form-control {
             text-align: center;
-            border-radius: 8px;
+            border-radius: 6px;
             border: 1px solid #dee2e6;
-            padding: 8px;
+            padding: 5px;
+            font-weight: bold;
+            font-size: 0.9rem;
         }
 
         .form-control:focus {
-            border-color: #28a745;
-            box-shadow: 0 0 0 0.25 row rgba(40, 167, 69, 0.25);
+            border-color: #5d9b44;
+            box-shadow: 0 0 0 0.25rem rgba(93, 155, 68, 0.25);
+        }
+
+        .bg-light-gdo {
+            background-color: #f8f9fa !important;
+            font-weight: bold;
         }
 
         .btn-success {
-            background-color: #28a745;
+            background-color: #5d9b44;
             border: none;
             border-radius: 10px;
             padding: 12px 30px;
@@ -60,15 +107,20 @@
         }
 
         .btn-success:hover {
-            background-color: #218838;
+            background-color: #4a7c36;
         }
 
         .badge-grupo {
             background-color: #e6f4ea;
-            color: #1e7e34;
+            color: #5d9b44;
             padding: 10px 20px;
             border-radius: 10px;
             font-weight: bold;
+        }
+
+        .info-docente {
+            font-size: 0.9rem;
+            margin-bottom: 20px;
         }
     </style>
 </head>
@@ -88,16 +140,6 @@
     </div>
 
     <div class="main-content">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <div>
-                <h2 class="fw-bold mb-0">Captura: {{ $asignacion->materia->nombre }}</h2>
-                <p class="text-muted small">Bachillerato General Gustavo Díaz Ordaz</p>
-            </div>
-            <div class="badge-grupo">
-                <i class="fas fa-users me-2"></i> Grupo: {{ $asignacion->grupo->nombre }}
-            </div>
-        </div>
-
         @if(session('success'))
         <div class="alert alert-success alert-dismissible fade show border-0 shadow-sm mb-4" role="alert">
             <i class="fas fa-check-circle me-2"></i> {{ session('success') }}
@@ -105,17 +147,49 @@
         </div>
         @endif
 
-        <div class="card table-card p-4">
+        <div class="card table-card">
+            <div class="container-fluid mb-4">
+                <div class="row align-items-center">
+                    <div class="col-2 text-center">
+                        <img src="{{ asset('imagenes/PNGLOGO.png') }}" alt="Logo GDO" class="header-logo">
+                    </div>
+                    <div class="col-8 text-center">
+                        <h4 class="header-title">BACHILLERATO GENERAL OFICIAL GUSTAVO DÍAZ ORDAZ</h4>
+                        <p class="header-subtitle">SISTEMA DE CONTROL ESTUDIANTIL</p>
+                        <p class="header-report-type">CAPTURA DE CALIFICACIONES - CARGA ACADÉMICA DEL DOCENTE</p>
+                    </div>
+                    <div class="col-2 text-end">
+                        <div class="badge-grupo">
+                             Grupo: {{ $asignacion->grupo->nombre }}
+                        </div>
+                    </div>
+                </div>
+                <hr class="header-divider">
+
+                <div class="row info-docente px-2">
+                    <div class="col-md-6">
+                        <p class="mb-1"><strong>MATERIA:</strong> <span class="text-uppercase text-success">{{ $asignacion->materia->nombre }}</span></p>
+                        <p class="mb-0"><strong>DOCENTE:</strong> <span class="text-uppercase">{{ Auth::user()->name }}</span></p>
+                    </div>
+                    <div class="col-md-6 text-md-end">
+                        <p class="mb-1"><strong>CICLO ESCOLAR:</strong> 2025-2026</p>
+                        <p class="mb-0"><strong>FECHA:</strong> {{ date('d/m/Y') }}</p>
+                    </div>
+                </div>
+            </div>
+
             <form action="{{ route('docente.guardar_calificaciones') }}" method="POST" id="formCalificaciones">
                 @csrf
-<input type="hidden" name="id_asignacion" value="{{ $asignacion->id_asignacion }}">                <div class="table-responsive">
-                    <table class="table table-hover align-middle">
-                        <thead class="table-light text-center">
+                <input type="hidden" name="id_asignacion" value="{{ $asignacion->id_asignacion }}">
+                
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover align-middle">
+                        <thead class="text-center">
                             <tr>
-                                <th rowspan="2" class="text-start" style="width: 30%;">Nombre del Estudiante</th>
-                                <th colspan="3" class="border-bottom">1er Periodo</th>
-                                <th rowspan="2">Suma (S)</th>
-                                <th rowspan="2">Promedio (P)</th>
+                                <th rowspan="2" class="text-start" style="width: 35%; padding-left: 15px;">Nombre del Estudiante</th>
+                                <th colspan="3">1er Periodo</th>
+                                <th rowspan="2" class="bg-light-gdo text-dark">Suma (S)</th>
+                                <th rowspan="2" class="bg-light-gdo text-dark">Promedio (P)</th>
                             </tr>
                             <tr>
                                 <th width="100">N1</th>
@@ -124,45 +198,44 @@
                             </tr>
                         </thead>
                         <tbody>
-    @foreach($alumnos as $alumno)
-    @php
-        // Buscamos la calificación exacta usando los tres identificadores
-        $calif = $alumno->calificaciones
-                        ->where('id_asignacion', $asignacion->id_asignacion)
-                        ->where('id_materia', $asignacion->id_materia)
-                        ->first();
-    @endphp {{-- IMPORTANTE: Esta etiqueta debe estar aquí para cerrar el bloque PHP --}}
-    
-    <tr class="student-row">
-        <td class="text-start">
-            <div class="fw-bold text-uppercase" style="font-size: 0.9rem;">
-                {{ $alumno->apellido_p }} {{ $alumno->apellido_m }} {{ $alumno->nombre }}
-            </div>
-        </td>
-        <td>
-            <input type="number" step="0.1" name="notas[{{ $alumno->id_estudiante }}][n1]"
-                class="form-control n1" min="0" max="10"
-                value="{{ $calif ? $calif->p1_n1 : '' }}" placeholder="0.0">
-        </td>
-        <td>
-            <input type="number" step="0.1" name="notas[{{ $alumno->id_estudiante }}][n2]"
-                class="form-control n2" min="0" max="10"
-                value="{{ $calif ? $calif->p1_n2 : '' }}" placeholder="0.0">
-        </td>
-        <td>
-            <input type="number" step="0.1" name="notas[{{ $alumno->id_estudiante }}][n3]"
-                class="form-control n3" min="0" max="10"
-                value="{{ $calif ? $calif->p1_n3 : '' }}" placeholder="0.0">
-        </td>
-        <td class="text-center bg-light">
-            <span class="suma fw-bold">0</span>
-        </td>
-        <td class="text-center bg-light">
-            <span class="promedio fw-bold text-success">0.0</span>
-        </td>
-    </tr>
-    @endforeach
-</tbody>
+                            @foreach($alumnos as $alumno)
+                            @php
+                                $calif = $alumno->calificaciones
+                                        ->where('id_asignacion', $asignacion->id_asignacion)
+                                        ->where('id_materia', $asignacion->id_materia)
+                                        ->first();
+                            @endphp
+                            
+                            <tr class="student-row">
+                                <td class="text-start ps-3">
+                                    <div class="fw-bold text-uppercase" style="font-size: 0.8rem; color: #444;">
+                                        {{ $alumno->apellido_p }} {{ $alumno->apellido_m }} {{ $alumno->nombre }}
+                                    </div>
+                                </td>
+                                <td>
+                                    <input type="number" step="0.1" name="notas[{{ $alumno->id_estudiante }}][n1]"
+                                        class="form-control n1" min="0" max="10"
+                                        value="{{ $calif ? $calif->p1_n1 : '' }}" placeholder="0.0">
+                                </td>
+                                <td>
+                                    <input type="number" step="0.1" name="notas[{{ $alumno->id_estudiante }}][n2]"
+                                        class="form-control n2" min="0" max="10"
+                                        value="{{ $calif ? $calif->p1_n2 : '' }}" placeholder="0.0">
+                                </td>
+                                <td>
+                                    <input type="number" step="0.1" name="notas[{{ $alumno->id_estudiante }}][n3]"
+                                        class="form-control n3" min="0" max="10"
+                                        value="{{ $calif ? $calif->p1_n3 : '' }}" placeholder="0.0">
+                                </td>
+                                <td class="text-center bg-light-gdo">
+                                    <span class="suma">0.0</span>
+                                </td>
+                                <td class="text-center bg-light-gdo">
+                                    <span class="promedio text-success">0.0</span>
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
                     </table>
                 </div>
 
@@ -176,7 +249,6 @@
     </div>
 
     <script>
-        // Función para calcular Suma y Promedio en tiempo real
         function calcularFila(row) {
             let n1 = parseFloat(row.querySelector('.n1').value) || 0;
             let n2 = parseFloat(row.querySelector('.n2').value) || 0;
@@ -188,7 +260,6 @@
             row.querySelector('.suma').innerText = suma.toFixed(1);
             row.querySelector('.promedio').innerText = promedio;
 
-            // Cambiar color si reprueba (opcional)
             if (promedio < 6) {
                 row.querySelector('.promedio').classList.replace('text-success', 'text-danger');
             } else {
@@ -196,11 +267,8 @@
             }
         }
 
-        // Ejecutar cálculo al escribir
         document.querySelectorAll('.student-row').forEach(row => {
-            // Calcular valores iniciales al cargar la página (por si ya hay datos)
             calcularFila(row);
-
             row.querySelectorAll('input').forEach(input => {
                 input.addEventListener('input', () => calcularFila(row));
             });

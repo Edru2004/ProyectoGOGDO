@@ -18,6 +18,9 @@ class EstudianteController extends Controller
 {
 
     // MÉTODO PARA EL DASHBOARD (INICIO)
+    // MÉTODO PARA EL DASHBOARD (INICIO DEL ADMINISTRADOR)
+    // MÉTODO PARA EL DASHBOARD (INICIO)
+    // Este método ahora es SOLO para el Admin
     public function inicio()
     {
         $totalEstudiantes = Estudiante::count();
@@ -27,6 +30,22 @@ class EstudianteController extends Controller
         return view('inicio', compact('totalEstudiantes', 'totalDocentes', 'totalTutores'));
     }
 
+    // Este método es el que CARGA TODO para el alumno
+    public function dashboardEstudiante()
+    {
+        $estudiante = Auth::guard('estudiante')->user();
+
+        if (!$estudiante) {
+            return redirect()->route('estudiante.login');
+        }
+
+        // Cargamos relaciones para evitar errores en la vista
+        $estudiante->load(['inscripcion.semestre', 'inscripcion.grupo']);
+
+        // IMPORTANTE: Asegúrate de que la vista sea 'estudiantes.inicio_estudiantes'
+        // que es la que tiene tu sidebar y diseño
+        return view('estudiantes.inicio_estudiantes', compact('estudiante'));
+    }
     // LISTADO DE ESTUDIANTES
     // LISTADO DE ESTUDIANTES
     public function index(Request $request)
@@ -115,27 +134,28 @@ class EstudianteController extends Controller
     }
 
     public function update(Request $request, $id)
-    {
-        $estudiante = Estudiante::findOrFail($id);
-        $data = $request->all();
+{
+    $estudiante = Estudiante::findOrFail($id);
+    $data = $request->all();
 
-        if ($request->filled('password')) {
-            $data['password'] = bcrypt($request->password);
-        } else {
-            unset($data['password']);
-        }
-
-        $estudiante->update($data);
-
-        if ($estudiante->inscripcion) {
-            $estudiante->inscripcion->update([
-                'id_semestre' => $request->id_semestre,
-                'id_grupo' => $request->id_grupo
-            ]);
-        }
-
-        return redirect()->route('estudiantes.index')->with('success', 'Datos actualizados.');
+    if ($request->filled('password')) {
+        $data['password'] = bcrypt($request->password);
+    } else {
+        unset($data['password']);
     }
+
+    $estudiante->update($data);
+
+    // CAMBIO AQUÍ: Solo actualizamos si los campos vienen en el formulario
+    if ($estudiante->inscripcion && $request->has('id_semestre') && $request->has('id_grupo')) {
+        $estudiante->inscripcion->update([
+            'id_semestre' => $request->id_semestre,
+            'id_grupo' => $request->id_grupo
+        ]);
+    }
+
+    return redirect()->route('estudiantes.index')->with('success', 'Datos actualizados.');
+}
 
     public function show($id)
     {
@@ -185,15 +205,106 @@ class EstudianteController extends Controller
     }
     public function verCalificaciones()
     {
-        // 1. Obtenemos el ID del estudiante logueado
-        $estudianteId = auth()->guard('estudiante')->id();
+        // 1. Obtenemos al alumno logueado para el Sidebar
+        $estudiante = Auth::guard('estudiante')->user();
 
-        // 2. Traemos sus calificaciones con la información de la materia
-        // Cambiamos 'materia' por 'asignacion.materia' y 'asignacion.docente'
+        if (!$estudiante) {
+            return redirect()->route('estudiante.login');
+        }
+
+        // 2. Traemos las calificaciones (tu lógica que ya tenías)
         $calificaciones = \App\Models\Calificaciones::with(['asignacion.materia', 'asignacion.docente'])
-            ->where('id_estudiante', $estudianteId)
+            ->where('id_estudiante', $estudiante->id_estudiante)
             ->get();
-        // 3. Retornamos la vista (asegúrate de que la ruta del archivo sea correcta)
-        return view('estudiantes.calificaciones', compact('calificaciones'));
+
+        // 3. PASAMOS AMBAS VARIABLES: 'calificaciones' para la tabla y 'estudiante' para el Sidebar
+        return view('estudiantes.calificaciones', compact('calificaciones', 'estudiante'));
     }
+    // Muestra la vista de configuración del alumno
+    public function configuracionE()
+    {
+        $estudiante = Auth::guard('estudiante')->user();
+        return view('configuracionE', compact('estudiante'));
+    }
+
+    // Procesa el cambio de foto del alumno
+    public function updateFotoE(Request $request)
+    {
+        $estudiante = Auth::guard('estudiante')->user();
+
+        $request->validate([
+            'foto' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+        ]);
+
+        if ($request->hasFile('foto')) {
+            // Borrar foto vieja si existe
+            if ($estudiante->foto && $estudiante->foto != 'default-student.png') {
+                $ruta = public_path('img/estudiantes/' . $estudiante->foto);
+                if (file_exists($ruta)) {
+                    unlink($ruta);
+                }
+            }
+
+            $nombreFoto = 'est_' . time() . '.' . $request->foto->extension();
+            $request->foto->move(public_path('img/estudiantes'), $nombreFoto);
+
+            // Guardar en la base de datos
+            $estudiante->foto = $nombreFoto;
+            $estudiante->save();
+        }
+
+        return back()->with('success', '¡Foto actualizada correctamente!');
+    }
+
+    // Procesa el cambio de contraseña del alumno
+    public function updatePasswordE(Request $request)
+    {
+        $request->validate([
+            'current_password' => 'required',
+            'new_password' => 'required|min:8|confirmed',
+        ]);
+
+        $estudiante = Auth::guard('estudiante')->user();
+
+        if (!\Illuminate\Support\Facades\Hash::check($request->current_password, $estudiante->password)) {
+            return back()->withErrors(['current_password' => 'La contraseña actual no coincide.']);
+        }
+
+        $estudiante->password = \Illuminate\Support\Facades\Hash::make($request->new_password);
+        $estudiante->save();
+
+        return back()->with('success', '¡Contraseña actualizada!');
+    }
+    public function descargarBoletaPDF()
+    {
+        $estudiante = Auth::guard('estudiante')->user();
+
+        // Traemos las calificaciones con las mismas relaciones que tu tabla
+        $calificaciones = \App\Models\Calificaciones::with(['asignacion.materia', 'asignacion.docente'])
+            ->where('id_estudiante', $estudiante->id_estudiante)
+            ->get();
+
+        // Cargamos la vista del PDF (tienes que crearla en views/estudiantes/boleta_pdf.blade.php)
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('estudiantes.boleta_pdf', compact('estudiante', 'calificaciones'));
+
+        // Retorna el PDF para descargar
+        return $pdf->download('Boleta_' . $estudiante->nombre . '.pdf');
+    }
+   public function verHorario()
+{
+    $estudiante = Auth::guard('estudiante')->user();
+    // Aquí pasas la variable $estudiante a la vista
+    return view('estudiantes.horario', compact('estudiante'));
+}
+
+public function descargarHorarioPDF()
+{
+    $estudiante = Auth::guard('estudiante')->user();
+    $horario = []; // La misma lógica de consulta de arriba
+
+    // Cargamos una vista especial diseñada para PDF
+    $pdf = Pdf::loadView('estudiantes.pdf_horario', compact('estudiante', 'horario'));
+    
+    return $pdf->download('mi_horario_' . $estudiante->id_estudiante . '.pdf');
+}
 }

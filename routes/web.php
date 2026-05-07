@@ -4,12 +4,13 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EstudianteController;
 use App\Http\Controllers\DocenteController;
 use App\Http\Controllers\AsignacionesController;
-use App\Http\Controllers\TutorController; 
+use App\Http\Controllers\TutorController;
 use App\Http\Controllers\DocenteLoginController;
 use App\Http\Controllers\Auth\LoginEstudianteController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\TwoFactorController;
-
+use App\Http\Controllers\ConfiguracionController;
+use App\Http\Controllers\EstudianteConfiguracionController;
 /*
 |--------------------------------------------------------------------------
 | 1. RUTAS DE ACCESO (LOGINS)
@@ -48,14 +49,14 @@ Route::middleware(['auth:web,docente,estudiante'])->group(function () {
 | Solo tú como administradora tienes acceso a estas rutas de gestión.
 */
 Route::middleware(['auth:web'])->group(function () {
-    
+
     Route::get('/inicio', [EstudianteController::class, 'inicio'])->name('inicio');
 
     // --- Gestión de Estudiantes (Ordenado para evitar error 404) ---
     Route::get('/estudiantes/reporte-pdf', [EstudianteController::class, 'reporteGeneral'])->name('estudiantes.pdf_general');
     Route::get('/estudiantes/registrar', [EstudianteController::class, 'create'])->name('estudiantes.create');
     Route::get('/estudiantes/pdf/{id}', [EstudianteController::class, 'descargarPDF'])->name('estudiantes.pdf');
-    
+
     Route::get('/estudiantes', [EstudianteController::class, 'index'])->name('estudiantes.index');
     Route::post('/estudiantes', [EstudianteController::class, 'store'])->name('estudiantes.store');
     Route::get('/estudiantes/{id}', [EstudianteController::class, 'show'])->name('estudiantes.show');
@@ -71,7 +72,7 @@ Route::middleware(['auth:web'])->group(function () {
     Route::get('/docentes/{id}/edit', [DocenteController::class, 'edit'])->name('docentes.edit');
     Route::put('/docentes/{id}', [DocenteController::class, 'update'])->name('docentes.update');
     Route::delete('/docentes/{id}', [DocenteController::class, 'destroy'])->name('docentes.destroy');
-    
+
     Route::get('/docentes/{id}/horario', [DocenteController::class, 'crearHorario'])->name('docentes.crearHorario');
     Route::get('/docentes/{id}/descargar-horario', [DocenteController::class, 'descargarHorario'])->name('docentes.descargarHorario');
 
@@ -84,6 +85,11 @@ Route::middleware(['auth:web'])->group(function () {
     Route::put('/tutores/{id}', [TutorController::class, 'update'])->name('tutores.update');
     Route::delete('/tutores/{id}', [TutorController::class, 'destroy'])->name('tutores.destroy');
 
+    //cambio de contraseña administrador y configuracio 
+    Route::get('/configuracion', [ConfiguracionController::class, 'index'])->name('configuracion.index');
+    Route::put('/configuracion/update', [ConfiguracionController::class, 'updateProfile'])->name('configuracion.update');
+    // Ruta para actualizar la contraseña
+    Route::put('/configuracion/password', [ConfiguracionController::class, 'updatePassword'])->name('configuracion.password');
     // --- Asignaciones ---
     Route::post('/asignaciones', [AsignacionesController::class, 'store'])->name('asignaciones.store');
 });
@@ -95,34 +101,69 @@ Route::middleware(['auth:web'])->group(function () {
 |--------------------------------------------------------------------------
 */
 Route::middleware(['auth:docente'])->prefix('docente')->name('docente.')->group(function () {
+
+    // Inicio / Dashboard
     Route::get('/inicio', function () {
         return view('docentes.Inicio_docentes');
     })->name('inicio_docentes');
 
+    // Gestión de Clases y Calificaciones
     Route::get('/mis-clases', [DocenteController::class, 'dashboard'])->name('clases_docente');
     Route::get('/lista/{id_asignacion}', [DocenteController::class, 'verlista'])->name('lista');
     Route::post('/guardar-calificaciones', [DocenteController::class, 'guardarCalificaciones'])->name('guardar_calificaciones');
-    
-    // Vistas adicionales
-    Route::get('/alumnos', function () { return view('docentes.Alumnos'); })->name('alumnos');
-    Route::get('/horario', function () { return view('docentes.Visualizar_horario'); })->name('visualizar_horario');
+
+    // Vistas Académicas
+    Route::get('/alumnos', function () {
+        return view('docentes.Alumnos');
+    })->name('alumnos');
+
+    Route::get('/horario', function () {
+        return view('docentes.Visualizar_horario');
+    })->name('visualizar_horario');
+
+    // Personalización de Interfaz
+    Route::put('/clase/estilo/{id}', [DocenteController::class, 'actualizarEstilo'])->name('actualizar_estilo');
+
+    /* |--------------------------------------------------------------------------
+    | CONFIGURACIÓN DE PERFIL (Foto y Contraseña)
+    |--------------------------------------------------------------------------
+    */
+    // El nombre final será: docente.configuracion.index
+    Route::get('/configuracion', [DocenteController::class, 'configuracionD'])->name('configuracion.index');
+
+    // El nombre final será: docente.configuracion.update
+    Route::put('/configuracion/foto', [DocenteController::class, 'updateFotoD'])->name('configuracion.update');
+
+    // El nombre final será: docente.configuracion.password
+    Route::put('/configuracion/password', [DocenteController::class, 'updatePasswordD'])->name('configuracion.password');
+
 });
-
-
 /*
 |--------------------------------------------------------------------------
 | 5. PANEL DE ESTUDIANTES (Guard: estudiante)
 |--------------------------------------------------------------------------
 */
-Route::middleware(['auth:estudiante'])->prefix('estudiante')->name('estudiante.')->group(function () {    
-    Route::get('/inicio', function () {
-        return view('estudiantes.inicio_estudiantes');
-    })->name('inicio_estudiantes');
+Route::middleware(['auth:estudiante'])->prefix('estudiante')->name('estudiante.')->group(function () {
 
-    Route::get('/dashboard', function () {
-        return view('estudiantes.inicio_estudiantes'); 
-    })->name('dashboard');
+    // El inicio ahora apunta al método dashboardEstudiante que es el que carga los datos
+    Route::get('/inicio', [EstudianteController::class, 'dashboardEstudiante'])->name('inicio_estudiantes');
+    Route::get('/dashboard', [EstudianteController::class, 'dashboardEstudiante'])->name('dashboard');
 
     Route::get('/credencial', [EstudianteController::class, 'verCredencial'])->name('credencial');
     Route::get('/calificaciones', [EstudianteController::class, 'verCalificaciones'])->name('calificaciones');
+
+    // Rutas de configuración (Corregidas dentro del grupo)
+    Route::get('/configuracion', [EstudianteController::class, 'configuracionE'])->name('configuracion.index');
+    Route::put('/configuracion/foto', [EstudianteController::class, 'updateFotoE'])->name('configuracion.update');
+    Route::put('/configuracion/password', [EstudianteController::class, 'updatePasswordE'])->name('configuracion.password');
+    Route::get('/descargar-boleta', [EstudianteController::class, 'descargarBoletaPDF'])->name('descargar.boleta');
+
+ // RUTA DEL HORARIO (La que te falta)
+    Route::get('/horario', [EstudianteController::class, 'verHorario'])->name('horario');
+    
+    // RUTA PARA EL PDF
+    Route::get('/horario/pdf', [EstudianteController::class, 'descargarPDF'])->name('horario.pdf');
+
+    // Configuración (Las que ya tenías)
+    Route::get('/configuracion', [EstudianteController::class, 'configuracionE'])->name('configuracion.index');
 });

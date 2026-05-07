@@ -96,15 +96,23 @@
             </div>
 
             <!-- Panel de Perfil (Usa tus clases .user-panel) -->
-            <div class="user-panel">
-                <div class="image-wrapper">
-                    <img src="https://ui-avatars.com/api/?name={{ Auth::guard('estudiante')->user()->nombre }}&background=fff&color=6c993e" class="user-img" alt="User">
+            <div class="user-panel d-flex flex-column align-items-center py-3">
+
+                <div class="position-relative mb-2">
+                    <img src="{{ asset('img/estudiantes/' . ($estudiante->foto ?? 'default-student.png')) }}"
+                        class="rounded-circle shadow-sm"
+                        style="width: 90px; height: 90px; object-fit: cover; border: 3px solid rgba(255, 255, 255, 0.3);">
                 </div>
-                <div class="info">
-                    <span class="user-name">{{ Auth::guard('estudiante')->user()->nombre }}</span>
-                    <small style="color: rgba(0,0,0,0.6)">Estudiante</small>
+
+                <div class="info text-center px-2">
+                    <h6 class="fw-bold text-white mb-0" style="font-size: 1rem; line-height: 1.2;">
+                        {{ $estudiante->nombre }} {{ $estudiante->apellido_p }}
+                    </h6>
+                    <small class="text-white-50">Estudiante</small>
                 </div>
             </div>
+
+            <hr class="mx-3 my-2" style="border-top: 1px solid rgba(255, 255, 255, 0.1);">
 
             <!-- Lista de Navegación -->
 
@@ -127,6 +135,18 @@
                     <a href="{{ route('estudiante.calificaciones') }}" class="{{ Request::is('estudiante/calificaciones*') ? 'active' : '' }}">
                         <span class="icon"><i class="bi bi-star-fill"></i></span>
                         <span class="text">Mis Calificaciones</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('estudiante.horario') }}" class="{{ Request::is('estudiante/horario*') ? 'active' : '' }}">
+                        <span class="icon"><i class="bi bi-calendar3"></i></span>
+                        <span class="text">Mi Horario</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('estudiante.configuracion.index') }}" class="{{ Request::is('estudiante/configuracion*') ? 'active' : '' }}">
+                        <span class="icon"><i class="bi bi-gear-fill"></i></span>
+                        <span class="text">Configuración</span>
                     </a>
                 </li>
             </ul>

@@ -6,7 +6,7 @@
         <div class="card-header bg-warning text-dark py-3">
             <h4 class="mb-0 fw-bold"><i class="bi bi-pencil-square me-2"></i>Editar Datos: {{ $estudiante->nombre }}</h4>
         </div>
-        
+
         <div class="card-body p-4">
             {{-- Le agregamos un ID al formulario para poder controlarlo con JS --}}
             <form id="form-update-estudiante" action="{{ route('estudiantes.update', $estudiante->id_estudiante) }}" method="POST">
@@ -89,12 +89,37 @@
                         <label class="form-label fw-bold text-primary">Tutor Responsable Actual</label>
                         <select name="id_tutor" class="form-select" required>
                             @foreach($tutores as $tutor)
-                                <option value="{{ $tutor->id_tutor }}" {{ $estudiante->id_tutor == $tutor->id_tutor ? 'selected' : '' }}>
-                                    {{ $tutor->nombre }} {{ $tutor->apellido_p }} - ({{ $tutor->parentesco }})
-                                </option>
+                            <option value="{{ $tutor->id_tutor }}" {{ $estudiante->id_tutor == $tutor->id_tutor ? 'selected' : '' }}>
+                                {{ $tutor->nombre }} {{ $tutor->apellido_p }} - ({{ $tutor->parentesco }})
+                            </option>
                             @endforeach
                         </select>
                     </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-bold">Semestre</label>
+                    <select name="id_semestre" class="form-select" required>
+                        <option value="">Seleccione un semestre</option>
+                        @foreach($semestres as $semestre)
+                        <option value="{{ $semestre->id_semestre }}"
+                            {{ (optional($estudiante->inscripcion)->id_semestre == $semestre->id_semestre) ? 'selected' : '' }}>
+                            {{ $semestre->nombre_semestre }}
+                        </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-bold">Grupo</label>
+                    <select name="id_grupo" class="form-select" required>
+                        <option value="">Seleccione un grupo</option>
+                        @foreach($grupos as $grupo)
+                        <option value="{{ $grupo->id_grupo }}"
+                            {{ (optional($estudiante->inscripcion)->id_grupo == $grupo->id_grupo) ? 'selected' : '' }}>
+                            {{ $grupo->nombre_grupo }}
+                        </option>
+                        @endforeach
+                    </select>
                 </div>
 
                 <div class="text-end mt-4">
@@ -117,7 +142,7 @@
             text: "Se actualizará la información del estudiante.",
             icon: 'question',
             showCancelButton: true,
-            confirmButtonColor: '#ffc107', 
+            confirmButtonColor: '#ffc107',
             cancelButtonColor: '#6c757d',
             confirmButtonText: 'Sí, actualizar',
             cancelButtonText: 'Cancelar',

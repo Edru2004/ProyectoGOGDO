@@ -86,13 +86,20 @@
             </div>
 
             <!-- Panel de Perfil del Maestro -->
-            <div class="user-panel">
-                <div class="image-wrapper">
-                    <img src="https://ui-avatars.com/api/?name={{ Auth::guard('docente')->user()->nombre }}&background=118b2e&color=fff" class="user-img" alt="Docente">
+            <div class="user-panel d-flex flex-column align-items-center py-3">
+                {{-- Contenedor de la foto --}}
+                <div class="position-relative mb-2">
+                    <img src="{{ asset('img/docentes/' . (Auth::guard('docente')->user()->foto ?? 'default-docente.png')) }}"
+                        class="rounded-circle shadow-sm"
+                        style="width: 90px; height: 90px; object-fit: cover; border: 3px solid rgba(255, 255, 255, 0.3);">
                 </div>
-                <div class="info">
-                    <span class="user-name">{{ Auth::guard('docente')->user()->nombre }}</span>
-                    <small style="color: rgba(0,0,0,0.6)">Personal Docente</small>
+
+                {{-- Información del Docente --}}
+                <div class="info text-center px-2">
+                    <h6 class="fw-bold text-white mb-0" style="font-size: 1rem; line-height: 1.2;">
+                        {{ Auth::guard('docente')->user()->nombre }} {{ Auth::guard('docente')->user()->apellido_p }}
+                    </h6>
+                    <small class="text-white-50">Personal Docente</small>
                 </div>
             </div>
 
@@ -117,11 +124,12 @@
                     </a>
                 </li>
                 <li>
-                    <a href="{{ route('docente.visualizar_horario') }}" class="{{ Request::is('docente/horario*') ? 'active' : '' }}">
-                        <span class="icon"><i class="bi bi-calendar3"></i></span>
-                        <span class="text">Mi Horario</span>
+                    <a href="{{ route('docente.configuracion.index') }}" class="{{ Request::is('docente/configuracion*') ? 'active' : '' }}">
+                        <span class="icon"><i class="bi bi-gear-fill"></i></span>
+                        <span class="text">Configuración</span>
                     </a>
                 </li>
+
             </ul>
 
             <!-- Cerrar Sesión -->

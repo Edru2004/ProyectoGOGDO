@@ -11,6 +11,8 @@ use App\Models\Tutor;
 use App\Models\Asignaciones; // Asegúrate de importar el modelo
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\Calificaciones;
+use Illuminate\Support\Facades\Auth; // <-- ESTA LÍNEA ES LA QUE TE FALTA
+use Illuminate\Support\Facades\Hash;
 
 class DocenteController extends Controller
 {
@@ -180,5 +182,75 @@ public function descargarHorario($id)
 
     // Descarga el archivo con el nombre del maestro
     return $pdf->download('Horario_'.$docente->apellido_p.'.pdf');
+}
+public function actualizarEstilo(Request $request, $id)
+{
+    // Buscamos la asignación (clase) por su ID
+    $clase = \App\Models\Asignaciones::findOrFail($id);
+
+    // Actualizamos los campos en la base de datos
+    $clase->update([
+        'color_card' => $request->color_card,
+        'icono_card' => $request->icono_card
+    ]);
+
+    // Regresamos a la página anterior con un mensaje de éxito
+    return back()->with('success', '¡Estilo de la clase actualizado correctamente!');
+}
+// Muestra la vista de configuración
+public function configuracionD()
+{
+    $docente = Auth::guard('docente')->user();
+    // Al estar en la raíz de 'views', solo ponemos el nombre del archivo
+    return view('configuracionD', compact('docente'));
+}
+
+// Procesa el cambio de foto del docente
+public function updateFotoD(Request $request)
+{
+    $docente = Auth::guard('docente')->user();
+
+    $request->validate([
+        'foto' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+    ]);
+
+    if ($request->hasFile('foto')) {
+        // Borrar foto vieja si existe y no es la default
+        if ($docente->foto && $docente->foto != 'default-docente.png') {
+            $ruta = public_path('img/docentes/' . $docente->foto);
+            if (file_exists($ruta)) {
+                unlink($ruta);
+            }
+        }
+
+        $nombreFoto = 'doc_' . time() . '.' . $request->foto->extension();
+        $request->foto->move(public_path('img/docentes'), $nombreFoto);
+
+        // Guardar en la base de datos
+        $docente->foto = $nombreFoto;
+        $docente->save();
+    }
+
+    return back()->with('success', '¡Foto de perfil actualizada!');
+}
+
+// Procesa el cambio de contraseña del docente
+public function updatePasswordD(Request $request)
+{
+    $request->validate([
+        'current_password' => 'required',
+        'new_password' => 'required|min:8|confirmed',
+    ]);
+
+    $docente = Auth::guard('docente')->user();
+
+    if (!\Illuminate\Support\Facades\Hash::check($request->current_password, $docente->password)) {
+        return back()->withErrors(['current_password' => 'La contraseña actual no coincide.']);
+    }
+
+    $docente->password = \Illuminate\Support\Facades\Hash::make($request->new_password);
+    $docente->save();
+
+    return back()->with('success', '¡Contraseña actualizada correctamente!');
 }
 }

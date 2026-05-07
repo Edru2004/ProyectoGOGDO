@@ -20,6 +20,24 @@
                     <p class="mb-1 text-muted text-uppercase small fw-bold">Parentesco</p>
                     <span class="badge bg-info text-dark fs-6">{{ $tutor->parentesco }}</span>
                 </div>
+                <div class="row mt-4">
+                    <!-- Columna de CURP -->
+                    <div class="col-md-4">
+                        <label class="text-muted small fw-bold text-uppercase">CURP</label>
+                        <p class="fw-bold mb-0">
+                            <i class="fa-solid fa-id-card text-primary me-2"></i> {{ $tutor->curp ?? 'No registrado' }}
+                        </p>
+                    </div>
+
+                    <!-- Columna de Ubicación (Dirección Completa) -->
+                    <div class="col-md-8">
+                        <label class="text-muted small fw-bold text-uppercase">Ubicación / Domicilio</label>
+                        <p class="fw-bold mb-0">
+                            <i class="fa-solid fa-location-dot text-danger me-2"></i>
+                            {{ $tutor->calle }} #{{ $tutor->numero }}, {{ $tutor->ciudad }}, {{ $tutor->municipio }}
+                        </p>
+                    </div>
+                </div>
             </div>
 
             <hr>
@@ -38,7 +56,7 @@
                 <div class="alert alert-light border m-0">Este tutor no tiene alumnos asignados actualmente.</div>
                 @endforelse
             </div>
-            
+
             <div class="mt-4 text-center">
                 <a href="{{ route('tutores.index') }}" class="btn btn-outline-secondary px-4">Volver al Listado</a>
             </div>

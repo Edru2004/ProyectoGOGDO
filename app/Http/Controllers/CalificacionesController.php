@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Calificaciones; // Importante importar el modelo
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash; // <--- IMPORTANTE: Agrega esto
 
 class CalificacionesController extends Controller
 {
@@ -50,5 +51,26 @@ class CalificacionesController extends Controller
         }
 
         return back()->with('success', '¡Lista del GDO actualizada correctamente!');
+    }
+    public function updatePassword(Request $request)
+    {
+        // 1. Validar que la nueva contraseña sea segura
+        $request->validate([
+            'current_password' => 'required',
+            'new_password' => 'required|min:8|confirmed', // 'confirmed' busca un campo llamado new_password_confirmation
+        ]);
+
+        $admin = Auth::user();
+
+        // 2. Verificar que la contraseña actual coincida con la de la BD
+        if (!Hash::check($request->current_password, $admin->password)) {
+            return back()->withErrors(['current_password' => 'La contraseña actual es incorrecta.']);
+        }
+
+        // 3. Encriptar y guardar la nueva contraseña
+        $admin->password = Hash::make($request->new_password);
+        $admin->save();
+
+        return back()->with('success', '¡Contraseña actualizada con éxito!');
     }
 }

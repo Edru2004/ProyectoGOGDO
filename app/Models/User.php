@@ -24,7 +24,8 @@ class User extends Authenticatable
         'email',
         'password',
         'two_factor_code',        // Agrega esto
-    'two_factor_expires_at'
+    'two_factor_expires_at', 
+    'foto',
     ];
 
     /**
