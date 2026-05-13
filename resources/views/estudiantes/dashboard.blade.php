@@ -97,23 +97,23 @@
 
             <!-- Panel de Perfil (Usa tus clases .user-panel) -->
             <div class="user-panel d-flex flex-column align-items-center py-3">
-
+                <!-- FOTO REDUCIDA -->
                 <div class="position-relative mb-2">
                     <img src="{{ asset('img/estudiantes/' . ($estudiante->foto ?? 'default-student.png')) }}"
                         class="rounded-circle shadow-sm"
-                        style="width: 90px; height: 90px; object-fit: cover; border: 3px solid rgba(255, 255, 255, 0.3);">
+                        style="width: 55px; height: 55px; object-fit: cover; border: 2px solid rgba(255, 255, 255, 0.3);">
                 </div>
 
-                <div class="info text-center px-2">
-                    <h6 class="fw-bold text-white mb-0" style="font-size: 1rem; line-height: 1.2;">
-                        {{ $estudiante->nombre }} {{ $estudiante->apellido_p }}
+                <!-- INFO MÁS PEQUEÑA -->
+                <div class="info text-center px-1">
+                    <h6 class="fw-bold text-white mb-0" style="font-size: 0.85rem; line-height: 1.1;">
+                        {{ $estudiante->nombre }}
                     </h6>
-                    <small class="text-white-50">Estudiante</small>
+                    <small class="text-white-50" style="font-size: 0.7rem;">Estudiante</small>
                 </div>
             </div>
 
             <hr class="mx-3 my-2" style="border-top: 1px solid rgba(255, 255, 255, 0.1);">
-
             <!-- Lista de Navegación -->
 
             <!-- Lista de Navegación corregida -->

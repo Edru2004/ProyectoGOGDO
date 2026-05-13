@@ -11,6 +11,8 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\TwoFactorController;
 use App\Http\Controllers\ConfiguracionController;
 use App\Http\Controllers\EstudianteConfiguracionController;
+use App\Http\Controllers\GeminiController;
+use App\Http\Controllers\AdminController;
 /*
 |--------------------------------------------------------------------------
 | 1. RUTAS DE ACCESO (LOGINS)
@@ -29,7 +31,9 @@ Route::post('/login-escolar', [LoginEstudianteController::class, 'login'])->name
 // Logout Único
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-
+Route::get('/gestion-usuarios', [AdminController::class, 'index'])->name('usuarios.index');
+Route::post('/gestion-usuarios/guardar', [AdminController::class, 'store'])->name('usuarios.store');
+Route::post('/promover-usuario/{id}', [AdminController::class, 'promoverUsuario'])->name('admin.promover');
 /*
 |--------------------------------------------------------------------------
 | 2. VERIFICACIÓN DE DOS PASOS (2FA)
@@ -75,7 +79,10 @@ Route::middleware(['auth:web'])->group(function () {
 
     Route::get('/docentes/{id}/horario', [DocenteController::class, 'crearHorario'])->name('docentes.crearHorario');
     Route::get('/docentes/{id}/descargar-horario', [DocenteController::class, 'descargarHorario'])->name('docentes.descargarHorario');
-
+    // Rutas para la gestión de horarios del docente
+    Route::get('/docentes/horario/{id}/editar', [DocenteController::class, 'editarHorario'])->name('docentes.editarHorario');
+    Route::put('/docentes/horario/{id}', [DocenteController::class, 'actualizarHorario'])->name('docentes.actualizarHorario');
+    Route::delete('/docentes/horario/{id}', [DocenteController::class, 'eliminarHorario'])->name('docentes.eliminarHorario');
     // --- Gestión de Tutores ---
     Route::get('/tutores', [TutorController::class, 'index'])->name('tutores.index');
     Route::get('/tutores/registrar', [TutorController::class, 'create'])->name('tutores.create');
@@ -85,10 +92,17 @@ Route::middleware(['auth:web'])->group(function () {
     Route::put('/tutores/{id}', [TutorController::class, 'update'])->name('tutores.update');
     Route::delete('/tutores/{id}', [TutorController::class, 'destroy'])->name('tutores.destroy');
 
+
+// Esta es la ruta que busca el sidebar
+Route::get('/configuracion/usuarios', [AdminController::class, 'index'])->name('configuracion.index');
+
+// Esta es la ruta para el botón de "Hacer Admin" dentro de la tabla
+Route::post('/configuracion/promover/{id}', [AdminController::class, 'promoverUsuario'])->name('admin.promover');
+
     //cambio de contraseña administrador y configuracio 
     Route::get('/configuracion', [ConfiguracionController::class, 'index'])->name('configuracion.index');
-    Route::put('/configuracion/update', [ConfiguracionController::class, 'updateProfile'])->name('configuracion.update');
-    // Ruta para actualizar la contraseña
+    // Cambia 'updateProfile' por 'update'
+    Route::put('/configuracion/update', [ConfiguracionController::class, 'update'])->name('configuracion.update');    // Ruta para actualizar la contraseña
     Route::put('/configuracion/password', [ConfiguracionController::class, 'updatePassword'])->name('configuracion.password');
     // --- Asignaciones ---
     Route::post('/asignaciones', [AsignacionesController::class, 'store'])->name('asignaciones.store');
@@ -136,7 +150,6 @@ Route::middleware(['auth:docente'])->prefix('docente')->name('docente.')->group(
 
     // El nombre final será: docente.configuracion.password
     Route::put('/configuracion/password', [DocenteController::class, 'updatePasswordD'])->name('configuracion.password');
-
 });
 /*
 |--------------------------------------------------------------------------
@@ -158,9 +171,9 @@ Route::middleware(['auth:estudiante'])->prefix('estudiante')->name('estudiante.'
     Route::put('/configuracion/password', [EstudianteController::class, 'updatePasswordE'])->name('configuracion.password');
     Route::get('/descargar-boleta', [EstudianteController::class, 'descargarBoletaPDF'])->name('descargar.boleta');
 
- // RUTA DEL HORARIO (La que te falta)
+    // RUTA DEL HORARIO (La que te falta)
     Route::get('/horario', [EstudianteController::class, 'verHorario'])->name('horario');
-    
+
     // RUTA PARA EL PDF
     Route::get('/horario/pdf', [EstudianteController::class, 'descargarPDF'])->name('horario.pdf');
 

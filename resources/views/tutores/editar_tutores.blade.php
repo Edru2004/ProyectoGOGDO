@@ -1,14 +1,25 @@
 @extends('Index')
 
 @section('contenido_dinamico')
+<!-- Overlay de Carga -->
+<div id="loader-overlay" style="display: none;">
+    <div class="loader-container">
+        <div class="spinner-border text-warning" role="status" style="width: 3rem; height: 3rem;">
+            <span class="visually-hidden">Cargando...</span>
+        </div>
+        <h5 class="mt-3 fw-bold text-dark">Actualizando datos del tutor...</h5>
+        <p class="text-muted small">Por favor, espera un momento.</p>
+    </div>
+</div>
+
 <div class="container mt-4">
     <div class="card shadow border-0">
         <div class="card-header bg-warning py-3">
             <h4 class="mb-0 fw-bold text-dark"><i class="bi bi-pencil-square me-2"></i>Editar Datos: {{ $tutor->nombre }}</h4>
         </div>
         
-     <div class="card-body p-4">
-            <!-- VISUALIZADOR DE ERRORES (Añadido) -->
+        <div class="card-body p-4">
+            <!-- VISUALIZADOR DE ERRORES -->
             @if ($errors->any())
                 <div class="alert alert-danger shadow-sm">
                     <ul class="mb-0">
@@ -18,11 +29,11 @@
                     </ul>
                 </div>
             @endif
+
             <form id="form-update-tutores" action="{{route ('tutores.update', $tutor->id_tutor)}}" method="POST">
                 @csrf
                 @method('PUT')
 
-                
                 <div class="row">
                     <div class="col-md-4 mb-3">
                         <label class="form-label fw-bold small">Nombre(s)</label>
@@ -39,7 +50,7 @@
                    <div class="col-md-4 mb-3">
                          <label class="form-label fw-bold small">CURP</label>
                         <input type="text" name="curp" class="form-control" value="{{ $tutor->curp }}" maxlength="18" style="text-transform: uppercase;" required>
-                        </div>
+                    </div>
                 </div>
 
                 <div class="row align-items-end">
@@ -61,12 +72,12 @@
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label class="form-label fw-bold small">Teléfono de Contacto</label>
-<!-- Busca esta línea (aprox 58) y cámbiale el NAME -->
-                        <input type="text" name="no_telefono" class="form-control" value="{{ $tutor->no_telefono }}">                    </div>
+                        <input type="text" name="no_telefono" class="form-control" value="{{ $tutor->no_telefono }}">
+                    </div>
                     <div class="col-md-6 mb-3">
                         <label class="form-label fw-bold small">Municipio y Estado</label>
-<!-- Busca esta línea en tu formulario y asegúrate de que diga name="municipio" -->
-<input type="text" name="municipio" class="form-control" value="{{ old('municipio', $tutor->municipio ?? '') }}">                    </div>
+                        <input type="text" name="municipio" class="form-control" value="{{ old('municipio', $tutor->municipio ?? '') }}">
+                    </div>
                 </div>
 
                 <div class="row">
@@ -86,17 +97,47 @@
 
                 <div class="text-end mt-4">
                     <a href="{{ route('tutores.index') }}" class="btn btn-light border px-4">Regresar</a>
-<button type="button" id="btn-update" class="btn btn-warning px-5 fw-bold shadow-sm">Actualizar Información</button>                </div>
+                    <button type="button" id="btn-update" class="btn btn-warning px-5 fw-bold shadow-sm">Actualizar Información</button>
+                </div>
             </form>
         </div>
     </div>
 </div>
 
+<style>
+/* Estilos para el Overlay de Carga */
+#loader-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.9);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.loader-container {
+    text-align: center;
+    background: white;
+    padding: 2.5rem;
+    border-radius: 20px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+</style>
+
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
     document.getElementById('btn-update').addEventListener('click', function(e) {
-        // Evitamos que haga cualquier cosa rara el botón
         e.preventDefault(); 
 
         Swal.fire({
@@ -111,13 +152,14 @@
             reverseButtons: true
         }).then((result) => {
             if (result.isConfirmed) {
-                // CORRECCIÓN: Quitamos la doble 'f' y usamos el ID correcto del formulario
+                // MOSTRAR ANIMACIÓN DE CARGA
+                document.getElementById('loader-overlay').style.display = 'flex';
+                // ENVIAR FORMULARIO
                 document.getElementById('form-update-tutores').submit();
             }
         });
     });
 
-    // No olvides tu función para el select que tienes arriba
     function toggleEspecificar() {
         const select = document.getElementById('parentescoSelect');
         const contenedor = document.getElementById('contenedorEspecificar');

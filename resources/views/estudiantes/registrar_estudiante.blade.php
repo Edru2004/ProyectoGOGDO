@@ -1,6 +1,17 @@
 @extends('Index')
 
 @section('contenido_dinamico')
+<!-- Overlay de Carga -->
+<div id="loader-overlay" style="display: none;">
+    <div class="loader-container">
+        <div class="spinner-border text-success" role="status" style="width: 3rem; height: 3rem;">
+            <span class="visually-hidden">Cargando...</span>
+        </div>
+        <h5 class="mt-3 fw-bold text-dark">Procesando inscripción...</h5>
+        <p class="text-muted small">Guardando datos del estudiante y asignando tutor.</p>
+    </div>
+</div>
+
 <div class="container-fluid mt-4 px-4">
     <div class="card shadow border-0">
         <div class="card-header py-3" style="background-color: #808080;"> 
@@ -10,7 +21,7 @@
         </div>
 
         <div class="card-body p-4">
-            <form action="{{ route('estudiantes.store') }}" method="POST">
+            <form id="formEstudiante" action="{{ route('estudiantes.store') }}" method="POST">
                 @csrf
                 <div class="row g-3 mb-4">
                     <div class="col-md-4">
@@ -83,17 +94,17 @@
                     </div>
                 </div>
 
-             <div class="col-12">
-    <label class="form-label fw-bold text-primary">Asignar Tutor Responsable</label>
-    <select name="id_tutor" id="id_tutor" class="form-select" required>
-        <option value=""></option>
-        @foreach($tutores as $tutor)
-            <option value="{{ $tutor->id_tutor }}">
-                {{ $tutor->curp }} - {{ $tutor->nombre }} {{ $tutor->apellido_p }}
-            </option>
-        @endforeach
-    </select>
-</div>
+                <div class="col-12">
+                    <label class="form-label fw-bold text-primary">Asignar Tutor Responsable</label>
+                    <select name="id_tutor" id="id_tutor" class="form-select" required>
+                        <option value=""></option>
+                        @foreach($tutores as $tutor)
+                            <option value="{{ $tutor->id_tutor }}">
+                                {{ $tutor->curp }} - {{ $tutor->nombre }} {{ $tutor->apellido_p }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
 
                 <hr class="my-4">
 
@@ -125,18 +136,55 @@
         </div>
     </div>
 </div>
+
+<style>
+/* Estilos para el Overlay de Carga */
+#loader-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.9);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.loader-container {
+    text-align: center;
+    background: white;
+    padding: 2.5rem;
+    border-radius: 20px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+</style>
+
 <!-- Cargar el CSS de Select2 -->
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-<!-- Cargar el JS de Select2 -->
+<!-- Scripts -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
 <script>
     $(document).ready(function() {
+        // Inicializar Select2
         $('#id_tutor').select2({
             placeholder: "Escribe la CURP o Nombre del tutor...",
             allowClear: true,
             width: '100%'
+        });
+
+        // Mostrar Loader al enviar formulario
+        $('#formEstudiante').on('submit', function() {
+            $('#loader-overlay').css('display', 'flex');
         });
     });
 </script>

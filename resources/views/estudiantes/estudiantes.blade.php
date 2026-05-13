@@ -1,6 +1,29 @@
 @extends('Index')
 
 @section('contenido_dinamico')
+{{-- ESTILOS PERSONALIZADOS PARA EL EFECTO HOVER --}}
+<style>
+    /* Efecto suave para las filas de la tabla */
+    .table-custom-hover tbody tr {
+        transition: all 0.25s ease;
+        cursor: default;
+    }
+
+    /* Estilo al pasar el mouse */
+    .table-custom-hover tbody tr:hover {
+        background-color: rgb(76, 119, 34) !important; /* Verde muy tenue acorde a tus checkboxes */
+        transform: translateY(-2px); /* Efecto de elevación sutil */
+        box-shadow: 0 4px 12px rgba(105, 185, 108, 1); /* Sombra suave para dar profundidad */
+        z-index: 1;
+        position: relative;
+    }
+
+    /* Resaltar el texto al pasar el mouse */
+    .table-custom-hover tbody tr:hover td {
+        color: #000 !important;
+    }
+</style>
+
 <div class="container-fluid mt-4 px-4">
     {{-- Encabezado de la página --}}
     <div class="d-flex justify-content-between align-items-center mb-4">
@@ -83,7 +106,8 @@
     <div class="card shadow border-0">
         <div class="card-body p-0">
             <div class="table-responsive">
-                <table class="table table-hover mb-0">
+                {{-- Agregamos la clase personalizada table-custom-hover --}}
+                <table class="table table-custom-hover mb-0">
                     <thead style="background-color: #f8f9fa;">
                         <tr>
                             <th class="ps-4" style="width: 50px;">
@@ -142,7 +166,6 @@
                                         <i class="bi bi-pencil"></i>
                                     </a>
                                     
-                                    {{-- FORMULARIO DE ELIMINACIÓN CON SWEETALERT --}}
                                     <form action="{{ route('estudiantes.destroy', $est->id_estudiante) }}" method="POST" class="d-inline form-eliminar">
                                         @csrf 
                                         @method('DELETE')
@@ -175,15 +198,12 @@
     </div>
 </div>
 
-{{-- SCRIPTS PARA LAS ALERTAS ESTÉTICAS --}}
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
 <script>
     // Alerta para Eliminar Estudiante
     document.querySelectorAll('.btn-sweet-delete').forEach(button => {
         button.addEventListener('click', function() {
             const form = this.closest('.form-eliminar');
-
             Swal.fire({
                 title: '¿Deseas eliminar este usuario?',
                 text: "Esta acción no se puede deshacer.",
@@ -201,8 +221,5 @@
             });
         });
     });
-
-    // Opcional: Alerta de éxito después de redireccionar
-  
 </script>
 @endsection

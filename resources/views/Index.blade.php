@@ -144,13 +144,19 @@
                         <span class="text">Padres de Familia</span>
                     </a>
                 </li>
-                <li>
-                    <a href="{{ route('configuracion.index') }}" class="{{ Request::is('configuracion*') ? 'active' : '' }}">
-                        {{-- Cambiamos bi-people-fill por bi-gear-fill --}}
-                        <span class="icon"><i class="bi bi-gear-fill"></i></span>
-                        <span class="text">Configuración</span>
+                <li class="nav-item">
+                    <a href="{{ route('usuarios.index') }}" class="nav-link text-white {{ Request::is('gestion-usuarios*') ? 'active' : '' }}">
+                        <span class="icon"><i class="bi bi-person-gear"></i></span>
+                        <span class="text">Gestión de Usuarios</span>
                     </a>
-                </li>
+                    </li>
+                    <li>
+                        <a href="{{ route('configuracion.index') }}" class="{{ Request::is('configuracion*') ? 'active' : '' }}">
+                            {{-- Cambiamos bi-people-fill por bi-gear-fill --}}
+                            <span class="icon"><i class="bi bi-gear-fill"></i></span>
+                            <span class="text">Configuración</span>
+                        </a>
+                    </li>
             </ul>
 
             <div class="mt-auto">

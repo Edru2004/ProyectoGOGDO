@@ -81,11 +81,24 @@ public function show($id)
         return redirect()->route('docentes.index');
     }
 
-    public function destroy($id)
-    {
-        Docente::destroy($id);
-        return redirect()->route('docentes.index');
-    }
+ public function destroy($id)
+{
+    $docente = Docente::findOrFail($id);
+
+    // 1. Buscamos todas las asignaciones del docente
+    $asignacionesIds = $docente->asignaciones()->pluck('id_asignacion');
+
+    // 2. Borramos las calificaciones vinculadas a esas asignaciones
+    \DB::table('calificaciones')->whereIn('id_asignacion', $asignacionesIds)->delete();
+
+    // 3. Ahora sí podemos borrar las asignaciones
+    $docente->asignaciones()->delete();
+
+    // 4. Finalmente, borramos al docente
+    $docente->delete();
+
+    return redirect()->route('docentes.index');
+}
   public function crearHorario($id)
 {
     // 1. Datos necesarios
@@ -253,4 +266,54 @@ public function updatePasswordD(Request $request)
 
     return back()->with('success', '¡Contraseña actualizada correctamente!');
 }
+public function editarHorario($id)
+    {
+        // Buscamos la asignación específica
+        $asignacion = Asignaciones::findOrFail($id);
+        
+        // Buscamos al docente dueño del horario
+        $docente = Docente::findOrFail($asignacion->id_docente);
+
+        // Traemos todas las materias y grupos (plural) para los selects
+        $materias = Materia::all(); 
+        $grupos = Grupos::all(); 
+
+        return view('docentes.editarHorario', compact('asignacion', 'docente', 'materias', 'grupos'));
+    }
+
+    /**
+     * Procesa la actualización en la base de datos
+     */
+    public function actualizarHorario(Request $request, $id)
+    {
+        $request->validate([
+            'id_materia'  => 'required',
+            'id_grupo'    => 'required',
+            'dia_semana'  => 'required',
+            'hora_inicio' => 'required',
+            'hora_fin'    => 'required',
+            'aula'        => 'required',
+        ]);
+
+        $asignacion = Asignaciones::findOrFail($id);
+        $asignacion->update($request->all());
+
+        return redirect()->route('docentes.show', $asignacion->id_docente)
+                         ->with('success', 'Asignación actualizada correctamente.');
+    }
+
+    /**
+     * Elimina el registro
+     */
+    public function eliminarHorario($id)
+    {
+        try {
+            $asignacion = Asignaciones::findOrFail($id);
+            $asignacion->delete();
+
+            return back()->with('success', 'La materia ha sido eliminada correctamente.');
+        } catch (\Exception $e) {
+            return back()->with('error', 'Error al eliminar: ' . $e->getMessage());
+        }
+    }
 }

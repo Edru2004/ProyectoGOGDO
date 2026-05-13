@@ -1,16 +1,21 @@
+/* --- VARIABLES GLOBALES --- */
 :root {
-    --sidebar-bg: #6c993e;    /* Verde institucional GDO */
-    --sidebar-hover: rgba(0, 0, 0, 0.15); 
-    --sidebar-text: #000000;
-    --active-item: #00000046;
-    --active-text: #6c993e;
+    /* Gradiente: Verde oscuro a Verde GDO */
+    --sidebar-bg-top: #3a5321;    /* Verde obscuro */
+    --sidebar-bg-bottom: #6c993e; /* Verde institucional GDO */
+    
+    --sidebar-hover: rgba(255, 255, 255, 0.15); 
+    --sidebar-text: #ffffff;      /* Texto blanco para mejor contraste */
+    --active-item: rgba(0, 0, 0, 0.25);
+    --active-text: #ffffff;
     --transition-speed: 0.4s;
 }
 
+/* --- ESTILOS GENERALES --- */
 body {
     margin: 0;
     font-family: 'Poppins', sans-serif;
-    background-color: #000000;
+    background-color: #f4f7f6;
     overflow-x: hidden;
 }
 
@@ -19,24 +24,26 @@ body {
     height: 100vh;
 }
 
-/* --- SIDEBAR MODERNO --- */
+/* --- SIDEBAR MODERNO CON GRADIENTE --- */
 .menu {
     width: 260px;
-    background-color: var(--sidebar-bg);
+    /* Aplicación de los dos colores en gradiente vertical */
+    background: linear-gradient(180deg, var(--sidebar-bg-top) 0%, var(--sidebar-bg-bottom) 100%);
     color: var(--sidebar-text);
     display: flex;
     flex-direction: column;
     padding: 20px 15px;
     transition: width var(--transition-speed) cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 4px 0 10px rgba(0,0,0,0.1);
+    box-shadow: 4px 0 10px rgba(0,0,0,0.2);
     z-index: 1000;
+    position: relative;
 }
 
 .menu.collapsed {
     width: 85px;
 }
 
-/* Header del Menú */
+/* Header del Menú (Logo y Título) */
 .menu-header {
     display: flex;
     align-items: center;
@@ -47,12 +54,17 @@ body {
 .toggle-btn {
     background: none;
     border: none;
-    color: rgb(0, 0, 0);
+    color: white;
     font-size: 24px;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
+    transition: transform 0.3s;
+}
+
+.toggle-btn:hover {
+    transform: scale(1.1);
 }
 
 .menu-title {
@@ -61,36 +73,45 @@ body {
     font-weight: 700;
     white-space: nowrap;
     transition: opacity 0.3s;
+    color: white;
 }
 
-/* Perfil de Usuario Flotante */
+/* Perfil de Usuario (Panel Flotante) */
 .user-panel {
     display: flex;
     align-items: center;
-    padding: 15px;
-    background: rgba(255, 255, 255, 0.1);
+    padding: 12px;
+    background: rgba(0, 0, 0, 0.15); /* Fondo sutil para resaltar */
     border-radius: 15px;
     margin-bottom: 25px;
     overflow: hidden;
     transition: all 0.3s;
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .user-img {
     width: 45px;
     height: 45px;
     border-radius: 12px;
-    border: 2px solid white;
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    object-fit: cover;
 }
 
 .info {
-    margin-left: 15px;
+    margin-left: 12px;
     white-space: nowrap;
 }
 
 .user-name {
     display: block;
     font-weight: 600;
-    font-size: 0.95rem;
+    font-size: 0.9rem;
+    color: white;
+}
+
+.user-role {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.7);
 }
 
 /* Lista de Navegación */
@@ -102,7 +123,7 @@ body {
 }
 
 .menu li {
-    margin: 10px 0;
+    margin: 8px 0;
 }
 
 .menu li a {
@@ -117,28 +138,37 @@ body {
 
 .menu .icon {
     min-width: 35px;
-    font-size: 22px;
+    font-size: 20px;
     display: flex;
     justify-content: center;
 }
 
 .menu .text {
-    margin-left: 15px;
+    margin-left: 10px;
     font-weight: 500;
     transition: opacity 0.3s;
 }
 
-/* Efectos Hover y Active */
+/* Efectos Hover y Active (Igual que en image_7f692c.png) */
 .menu li a:hover {
     background: var(--sidebar-hover);
     transform: translateX(8px);
+    color: #ffffff !important;
 }
 
 .menu li a.active {
     background: var(--active-item);
     color: var(--active-text) !important;
-    font-weight: 700;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    border-left: 4px solid white; /* Línea de enfoque */
+}
+
+/* Sección de Cerrar Sesión (Al final) */
+.logout-item {
+    margin-top: auto;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 15px;
 }
 
 /* Ocultar elementos al colapsar */
@@ -148,10 +178,20 @@ body {
     display: none;
 }
 
-/* --- CONTENIDO --- */
+.menu.collapsed .user-panel {
+    padding: 10px;
+    justify-content: center;
+}
+
+.menu.collapsed .user-img {
+    margin-left: 0;
+}
+
+/* --- ÁREA DE CONTENIDO --- */
 .contenido {
     flex: 1;
     padding: 30px;
     overflow-y: auto;
     background-color: #ffffff;
+    transition: all var(--transition-speed);
 }

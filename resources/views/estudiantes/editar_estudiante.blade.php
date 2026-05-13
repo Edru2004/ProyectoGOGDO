@@ -1,6 +1,17 @@
 @extends('Index')
 
 @section('contenido_dinamico')
+<!-- Overlay de Carga -->
+<div id="loader-overlay" style="display: none;">
+    <div class="loader-container">
+        <div class="spinner-border text-warning" role="status" style="width: 3rem; height: 3rem;">
+            <span class="visually-hidden">Cargando...</span>
+        </div>
+        <h5 class="mt-3 fw-bold text-dark">Actualizando datos...</h5>
+        <p class="text-muted small">Estamos guardando los cambios del estudiante.</p>
+    </div>
+</div>
+
 <div class="container mt-4">
     <div class="card shadow border-0">
         <div class="card-header bg-warning text-dark py-3">
@@ -8,7 +19,6 @@
         </div>
 
         <div class="card-body p-4">
-            {{-- Le agregamos un ID al formulario para poder controlarlo con JS --}}
             <form id="form-update-estudiante" action="{{ route('estudiantes.update', $estudiante->id_estudiante) }}" method="POST">
                 @csrf
                 @method('PUT')
@@ -96,41 +106,67 @@
                         </select>
                     </div>
                 </div>
-                <div class="col-md-6 mb-3">
-                    <label class="form-label fw-bold">Semestre</label>
-                    <select name="id_semestre" class="form-select" required>
-                        <option value="">Seleccione un semestre</option>
-                        @foreach($semestres as $semestre)
-                        <option value="{{ $semestre->id_semestre }}"
-                            {{ (optional($estudiante->inscripcion)->id_semestre == $semestre->id_semestre) ? 'selected' : '' }}>
-                            {{ $semestre->nombre_semestre }}
-                        </option>
-                        @endforeach
-                    </select>
-                </div>
 
-                <div class="col-md-6 mb-3">
-                    <label class="form-label fw-bold">Grupo</label>
-                    <select name="id_grupo" class="form-select" required>
-                        <option value="">Seleccione un grupo</option>
-                        @foreach($grupos as $grupo)
-                        <option value="{{ $grupo->id_grupo }}"
-                            {{ (optional($estudiante->inscripcion)->id_grupo == $grupo->id_grupo) ? 'selected' : '' }}>
-                            {{ $grupo->nombre_grupo }}
-                        </option>
-                        @endforeach
-                    </select>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-bold">Semestre</label>
+                        <select name="id_semestre" class="form-select" required>
+                            <option value="">Seleccione un semestre</option>
+                            @foreach($semestres as $semestre)
+                            <option value="{{ $semestre->id_semestre }}"
+                                {{ (optional($estudiante->inscripcion)->id_semestre == $semestre->id_semestre) ? 'selected' : '' }}>
+                                {{ $semestre->nombre_semestre }}
+                            </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-bold">Grupo</label>
+                        <select name="id_grupo" class="form-select" required>
+                            <option value="">Seleccione un grupo</option>
+                            @foreach($grupos as $grupo)
+                            <option value="{{ $grupo->id_grupo }}"
+                                {{ (optional($estudiante->inscripcion)->id_grupo == $grupo->id_grupo) ? 'selected' : '' }}>
+                                {{ $grupo->nombre_grupo }}
+                            </option>
+                            @endforeach
+                        </select>
+                    </div>
                 </div>
 
                 <div class="text-end mt-4">
                     <a href="{{ route('estudiantes.index') }}" class="btn btn-light border px-4 me-2">Regresar</a>
-                    {{-- Cambiamos el type a "button" para que no se envíe solo --}}
                     <button type="button" id="btn-update" class="btn btn-warning px-5 shadow-sm fw-bold">Actualizar Información</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
+
+<style>
+/* Estilos para el Overlay de Carga */
+#loader-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.85);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.loader-container {
+    text-align: center;
+    background: white;
+    padding: 2rem;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+</style>
 
 {{-- Scripts para SweetAlert2 --}}
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -149,7 +185,10 @@
             reverseButtons: true
         }).then((result) => {
             if (result.isConfirmed) {
-                // Enviamos el formulario si el usuario confirma
+                // 1. Mostrar el loader inmediatamente tras la confirmación
+                document.getElementById('loader-overlay').style.display = 'flex';
+                
+                // 2. Enviar el formulario
                 document.getElementById('form-update-estudiante').submit();
             }
         });

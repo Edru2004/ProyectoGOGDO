@@ -26,6 +26,7 @@ class User extends Authenticatable
         'two_factor_code',        // Agrega esto
     'two_factor_expires_at', 
     'foto',
+    'rol',
     ];
 
     /**
